@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}Index{% endblock %}
+{% block content %}
+    <h2>Courses</h2>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <th>
+                ID
+            </th>
+            <th>
+                Name
+            </th>
+            <th>
+                Price
+            </th>
+            <th>
+                Ingredients
+            </th>
+        </thead>
+        <tbody>
+            {% for course in courses %}
+            <tr>
+                <td>
+                    {{ course.c_id }}
+                </td>
+                <td>
+                    <a href="#">
+                        {{ course.c_name }}
+                    </a>
+                </td>
+                <td>
+                    {{ course.price }}
+                </td>
+                <td>
+                    <table class="table table-bordered table-striped">
+                        {% for ingredient in course.ingredients %}
+                        <tr>
+                            <td>{{ ingredient.i_name }}</td> 
+                            <td class="{% if ingredient.available == "1" %}bg-success{% else %}bg-danger{% endif %}"></td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <br>
+    <h2>Ingredients</h2>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <th>
+                ID
+            </th>
+            <th>
+                Name
+            </th>
+            <th>
+                Available
+            </th>
+            <th>
+                Allergenes
+            </th>
+        </thead>
+        <tbody>
+            {% for ingredient in ingredients %}
+            <tr>
+                <td>
+                    {{ ingredient.i_id }}
+                </td>
+                <td>
+                    <a href="#">
+                        {{ ingredient.i_name }}
+                    </a>
+                </td>
+                <td class="{% if ingredient.available == "1" %}bg-success{% else %}bg-danger{% endif %}">
+                </td>
+                <td>
+                    {% for allergene in ingredient.allergenes %}
+                        <em>{{ allergene.a_id }}</em> | <em>{{ allergene.a_name }}</em>
+                        <br>
+                    {% endfor %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <h2>Allergenes</h2>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <th>
+                ID
+            </th>
+            <th>
+                Name
+            </th>
+        </thead>
+        <tbody>
+            {% for allergene in allergenes %}
+            <tr>
+                <td>
+                    {{ allergene.a_id }}
+                </td>
+                <td>
+                    {{ allergene.a_name }}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
