@@ -1,6 +1,7 @@
-from flask import Flask, render_template, request, g
+from flask import Flask, render_template, request, g, redirect, url_for
 import mysql.connector
 from get_functions import *
+from remove_functions import *
 
 app = Flask(__name__)
 
@@ -46,6 +47,14 @@ def index():
     ingredients = get_ingredients(get_db())
     allergenes = get_allergenes(get_db()) # Maybe change name to triggers
     return render_template("index.html", courses=courses, ingredients=ingredients, allergenes=allergenes)
+
+
+@app.route("/remove_course", methods=["POST"])
+def remove_course_db():
+    c_id = request.form.get("c_id", None)
+    if c_id != None:
+        remove_course(get_db(), c_id)
+        return redirect(url_for("index"))
 
 
 if __name__ == "__main__":
