@@ -25,9 +25,11 @@
                     {{ course.c_id }}
                 </td>
                 <td>
-                    <a href="#">
-                        {{ course.c_name }}
-                    </a>
+                    {{ course.c_name }}
+                    <form action="#">
+                        <input type="button" class="btn btn-info edit_course" name="{{ course.c_name }}_{{ course.c_id }}" value="Edit">
+                        <input type="button" class="btn btn-danger remove_course" name="{{ course.c_name }}_{{ course.c_id }}" value="Remove">
+                    </form>
                 </td>
                 <td>
                     {{ course.price }}
