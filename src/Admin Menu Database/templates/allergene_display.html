@@ -1,0 +1,10 @@
+{% for allergene in allergenes %}
+    <tr>
+        <td>
+            {{ allergene.a_id }}
+        </td>
+        <td>
+            <h4>{{ allergene.a_name }}</h4>
+        </td>
+    </tr>
+{% endfor %}

@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, g, redirect, url_for
+import json
 import mysql.connector
 from get_functions import *
 from remove_functions import *
@@ -7,6 +8,7 @@ app = Flask(__name__)
 
 app.debug = True
 
+
 # CHANGE THIS INFORMATION FOR YOUR DATABASE ACCESS OK
 user_info = {
     "username": "root",
@@ -14,7 +16,6 @@ user_info = {
     "database": "dat210_menu",
     "hostname": "localhost"
 }
-
 
 app.config["DATABASE_USER"] = user_info["username"]
 app.config["DATABASE_PASSWORD"] = user_info["password"]
@@ -49,12 +50,13 @@ def index():
     return render_template("index.html", courses=courses, ingredients=ingredients, allergenes=allergenes)
 
 
-@app.route("/remove_course", methods=["POST"])
+@app.route("/remove_course", methods=["GET"])
 def remove_course_db():
-    c_id = request.form.get("c_id", None)
+    c_id = request.args.get("c_id", None)
     if c_id != None:
         remove_course(get_db(), c_id)
-        return redirect(url_for("index"))
+        return render_template("course_display.html", courses=get_courses(get_db()))
+    return redirect(url_for("index"))
 
 
 if __name__ == "__main__":

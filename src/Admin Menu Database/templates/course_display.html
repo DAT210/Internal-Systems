@@ -1,0 +1,38 @@
+{% for course in courses %}
+    <tr>
+        <td>
+            <h4>
+                {{ course.c_id }}
+            </h4>
+            <br>
+            <button class="btn btn-info edit_course hidden-admin" name="{{ course.c_name }}_{{ course.c_id }}">Edit</button>
+        </td>
+        <td>
+            <h4>{{ course.c_name }}</h4>
+            <br>
+            <button class="btn btn-danger remove_course hidden-admin" name="{{ course.c_name }}_{{ course.c_id }}">X</button>
+        </td>
+        <td>
+            {{ course.price }}
+        </td>
+        <td>
+            <table class="table table-bordered table-striped">
+                {% for ingredient in course.ingredients %}
+                <tr>
+                    <td>
+                        <button class="btn btn-danger remove_ingredient_from_course hidden-admin" name="{{ course.c_id }}_{{ ingredient.i_id }}">X</button>
+                        {{ ingredient.i_name }}
+                    </td> 
+                    <td class="{% if ingredient.available == "1" %}bg-success{% else %}bg-danger{% endif %}"></td>
+                </tr>
+                {% endfor %}
+            </table>
+            <form action="#" class="form-inline hidden-admin" autocomplete="off">
+                <div class="autocomplete">
+                    <input type="text" class="form-control ingredient-input" name="ingredient_autocomplete" placeholder="ingredient">
+                </div>
+                <input type="button" style="display:inline" class="btn btn-success add_ingredient" value="+">
+            </form>
+        </td>
+    </tr>
+{% endfor %}

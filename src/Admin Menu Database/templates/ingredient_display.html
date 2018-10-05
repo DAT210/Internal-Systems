@@ -1,0 +1,18 @@
+{% for ingredient in ingredients %}
+    <tr>
+        <td>
+            {{ ingredient.i_id }}
+        </td>
+        <td>
+            <h4>{{ ingredient.i_name }}</h4>
+        </td>
+        <td class="{% if ingredient.available == "1" %}bg-success{% else %}bg-danger{% endif %}">
+        </td>
+        <td>
+            {% for allergene in ingredient.allergenes %}
+                <em>{{ allergene.a_id }}</em> | <em>{{ allergene.a_name }}</em>
+                <br>
+            {% endfor %}
+        </td>
+    </tr>
+{% endfor %}
