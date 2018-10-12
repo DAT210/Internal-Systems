@@ -11,7 +11,13 @@ remove_queries = {
     "remove_ingredient": ["DELETE FROM course_ingredient WHERE i_id = {i_id}", "DELETE FROM ingredient_allergene WHERE i_id = {i_id}", "DELETE FROM ingredient WHERE i_id = {i_id}"],
 
     # Delete an allergene by a_id
-    "remove_allergene": ["DELETE FROM ingredient_allergene WHERE a_id = {a_id}", "DELETE FROM allergene WHERE a_id = {a_id}"]
+    "remove_allergene": ["DELETE FROM ingredient_allergene WHERE a_id = {a_id}", "DELETE FROM allergene WHERE a_id = {a_id}"],
+
+    # Delete an ingredient for a course by c_id and i_id
+    "remove_course_ingredient": ["DELETE FROM course_ingredient WHERE c_id = {c_id} AND i_id = {i_id}"],
+
+    # Delete an allergene for an ingredient by i_id and a_id
+    "remove_ingredient_allergene": ["DELETE FROM ingredient_allergene WHERE i_id = {i_id} AND a_id = {a_id}"]
 }
 
 
@@ -30,6 +36,18 @@ def remove_ingredient(db, i_id):
 def remove_allergene(db, a_id):
     for q in remove_queries["remove_allergene"]:
         q = q.replace("{a_id}", str(a_id))
+        execute_query(q, db)
+
+
+def remove_course_ingredient(db, c_id, i_id):
+    for q in remove_queries["remove_course_ingredient"]:
+        q = q.replace("{c_id}", str(c_id)).replace("{i_id}", str(i_id))
+        execute_query(q, db)
+
+
+def remove_ingredient_allergene(db, i_id, a_id):
+    for q in remove_queries["remove_ingredient_allergene"]:
+        q = q.replace("{i_id}", str(i_id)).replace("{a_id}", str(a_id))
         execute_query(q, db)
 
 

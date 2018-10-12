@@ -3,6 +3,8 @@ import json
 import mysql.connector
 from get_functions import *
 from remove_functions import *
+from insert_functions import *
+from update_functions import *
 
 app = Flask(__name__)
 
@@ -49,14 +51,44 @@ def index():
     allergenes = get_allergenes(get_db()) # Maybe change name to triggers
     return render_template("index.html", courses=courses, ingredients=ingredients, allergenes=allergenes)
 
-
+## DATABASE GET REQUEST REMOVE FUNCTIONS ##
 @app.route("/remove_course", methods=["GET"])
 def remove_course_db():
     c_id = request.args.get("c_id", None)
     if c_id != None:
         remove_course(get_db(), c_id)
-        return render_template("course_display.html", courses=get_courses(get_db()))
-    return redirect(url_for("index"))
+    return render_template("course_display.html", courses=get_courses(get_db()))
+
+
+@app.route("/remove_ingredient_from_course", methods=["GET"])
+def remove_ingredient_from_course_db():
+    c_id = request.args.get("c_id", None)
+    i_id = request.args.get("i_id", None)
+    if c_id != None and i_id != None:
+        remove_course_ingredient(get_db(), c_id, i_id)
+    return render_template("course_display.html", courses=get_courses(get_db()))
+
+## DATABASE GET REQUEST GET FUNCTIONS ##
+@app.route("/get_ingredients", methods=["GET"])
+def get_ingredients_db():
+    ingredients = get_ingredients(get_db())
+    return json.dumps(ingredients)
+
+
+@app.route("/get_allergenes", methods=["GET"])
+def get_allergenes_db():
+    allergenes = get_allergenes(get_db())
+    return json.dumps(allergenes)
+
+## DATABASE GET REQUEST INSERT FUNCTIONS ##
+@app.route("/add_ingredient_to_course", methods=["GET"])
+def insert_ingredient_to_course():
+    c_id = request.args.get("c_id", None)
+    i_id = request.args.get("i_id", None)
+    if c_id != None and i_id != None:
+        insert_course_ingredient(get_db(), c_id, i_id)
+    return render_template("course_display.html", courses=get_courses(get_db()))
+
 
 
 if __name__ == "__main__":
