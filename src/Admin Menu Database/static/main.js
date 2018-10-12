@@ -1,31 +1,145 @@
 
-var ingredients = []
+/*
+var ingredients = [
+    "ingredient alpha",
+    "ingredient bravo",
+    "ingredient charlie",
+    "ingredient delta",
+    "ingredient echo",
+    "ingredient fractal",
+    "ingredient gamma",
+    "ingredient hector",
+    "ingredient indie",
+    "ingredient jodie"
+];
+*/
+
+var ingredients;
+var allergenes;
+
+var authLevel = 2;
 
 $(document).ready(function() {
+    var visible = [];
     init();
     
-    
-    $(".edit_course").on("click", function() {
-        var id = $(this).prop("name").split("_")[1];
-    });
-    
     function removeCourse() {
-        var info = $(this).prop("name").split("_");
-        
-        if (confirm("Are you sure you want to remove the course '" + info[0] + "'?")) {
-            $.get("/remove_course", {c_id: info[1]}, function (data) {
+        if (authLevel > 1) {
+            var info = $(this).prop("name").split("_");
+            
+            if (confirm("Are you sure you want to remove the course '" + info[0] + "'?")) {
+                $.get("/remove_course", {c_id: info[1]}, function (data) {
+                    $(".course_display").html(data);
+                    init();
+                });
+            }
+        } else {
+            alert("PERMISSION DENIED");
+        }
+    }
+
+    function removeIngredientFromCourse() {
+        if (authLevel > 1) {
+            var info = $(this).prop("name").split("_");
+            
+            if (confirm("Are you sure you want to remove this ingredient from the course?")) {
+                $.get("/remove_ingredient_from_course", {c_id: info[0], i_id: info[1]}, function (data) {
+                    $(".course_display").html(data);
+                    init();
+                });
+            }
+        } else {
+            alert("PERMISSION DENIED");
+        }
+    }
+
+    function addIngredientToCourse() {
+        if (authLevel > 1) {
+            var c_id = $(this).prop("id").split("-")[1];
+            var i_id = $("#autocomplete_ingredient-" + c_id).prop("name");
+
+            $.get("/add_ingredient_to_course", {c_id: c_id, i_id: i_id}, function (data) {
                 $(".course_display").html(data);
                 init();
             });
+
+        } else {
+            alert("PERMISSION DENIED");
         }
     }
     
     function init() {
+        updateAutocomplete();
+
         $(".remove_course").on("click", removeCourse);
+        $(".remove_ingredient_from_course").on("click", removeIngredientFromCourse);
+        $(".add_ingredient").on("click", addIngredientToCourse)
 
         var ingredientInputs = $(".ingredient-input");
         for (var i = 0; i < ingredientInputs.length; i++) {
-            autocomplete(ingredientInputs[i], ingredients);
+            var ingredientsIn = [];
+            for (var j = 0; j < ingredients.length; j++) {
+                ingredientsIn.push(ingredients[j].i_name);
+            }
+            autocomplete(ingredientInputs[i], ingredientsIn);
+        }
+
+        for (var i = 0; i < visible.length; i++) {
+            if (visible[i]) {
+                $(".hidden-admin-" + i).css("display", "inline-block");
+            } else {
+                $(".hidden-admin-" + i).css("display", "none");
+            }
+        }
+
+        if (authLevel < 2) {
+            $(".edit_course").css("display", "none");
+        } else {
+            initAdminFunctions();
+        }
+    }
+
+    function updateAutocomplete() {
+        // I don't know if there are any better solutions for these yet, but these requests
+        // have to be synchronous as far as I know in order to work properly.
+
+        // Update Ingredients
+        $.ajax({
+            url: "/get_ingredients",
+            type: "get",
+            async: false,
+            success: function(data) {
+                ingredients = JSON.parse(data);
+            }
+        });
+
+        // Update Allergenes
+        $.ajax({
+            url: "/get_allergenes",
+            type: "get",
+            async: false,
+            success: function(data) {
+                allergenes = JSON.parse(data);
+            }
+        });
+    }
+
+    function initAdminFunctions() {
+        if (authLevel < 2) {
+            alert("ACCESS DENIED");
+        } else {
+            $(".edit_course").css("display", "inline-block");
+            $(".edit_course").on("click", function() {
+                var id = $(this).prop("name").split("_")[1];
+                var idInt = parseInt(id);
+                if (visible[idInt]) {
+                    $(".hidden-admin-" + id).css("display", "none");
+                    visible[idInt] = false;
+                } else {
+                    $(".hidden-admin-" + id).css("display", "inline-block");
+                    visible[idInt] = true;
+                }
+            });
         }
     }
 });
@@ -50,8 +164,10 @@ function autocomplete(inp, arr) {
                 b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
                 b.innerHTML += arr[i].substr(val.length);
                 b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+                b.innerHTML += "<input type='hidden' value='" + i + "'>";
                 b.addEventListener("click", function(e) {
                     inp.value = this.getElementsByTagName("input")[0].value;
+                    inp.name = parseInt(this.getElementsByTagName("input")[1].value) + 1;
                     closeAllLists();
                 });
                 a.appendChild(b);
@@ -100,4 +216,5 @@ function autocomplete(inp, arr) {
     document.addEventListener("click", function(e) {
         closeAllLists(e.target);
     });
+    // END OF W3 SCHOOLS AUTOCOMPLETE
 }
