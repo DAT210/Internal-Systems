@@ -1,37 +1,72 @@
 {% for course in courses %}
     <tr>
-        <td>
-            <h4 style="display: inline-block">
+        <td style="width: 12.5%">
+            <h5 style="display: inline-block">
                 {{ course.c_id }}
-            </h4>
-            <br>
-            <button class="btn btn-info btn-lg edit_course" name="{{ course.c_name }}_{{ course.c_id }}">Edit</button>
+            </h5>
+            {% if admin %}
+                &ensp;
+                <button class="btn btn-info edit_course" name="{{ course.c_name }}_{{ course.c_id }}">Edit</button>
+                &ensp;
+                <button class="btn btn-danger remove_course" name="{{ course.c_name }}_{{ course.c_id }}">Remove</button>
+            {% endif %}
         </td>
-        <td>
-            <button class="btn btn-danger remove_course hidden-admin-{{ course.c_id }}" style="display: none" name="{{ course.c_name }}_{{ course.c_id }}">X</button>
-            <h4 style="display: inline-block">{{ course.c_name }}</h4>
+        <td style="width: 25%">
+            {% if admin %}
+                <span class="hidden-edit-{{ course.c_id }}">
+            {% endif %}
+                    <h5 style="display: inline-block">
+                        {{ course.c_name }}
+                    </h5>
+            {% if admin %}
+                </span>
+                <span class="hidden-default-{{ course.c_id }}" style="display: none">
+                    <form action="#" class="form-inline">
+                        <input type="text" id="course-edit-name_{{ course.c_id }}" class="form-control course-edit-input_{{ course.c_id }}" placeholder="Course Name" value="{{ course.c_name }}">
+                        &ensp;
+                        <button class="btn btn-info edit_course_name" name="{{ course.c_id }}">Change</button>
+                    </form>
+                </span>
+            {% endif %}
         </td>
-        <td>
-            {{ course.price }}
-        </td>
-        <td>
+        <td style="width: 25%">
+            {% if admin %}
+                <span class="hidden-edit-{{ course.c_id }}">
+            {% endif %}
+                    {{ course.price }}
+            {% if admin %}
+                </span>
+                <span class="hidden-default-{{ course.c_id }}" style="display: none">
+                    <form action="#" class="form-inline">
+                        <input type="number" id="course-edit-price_{{ course.c_id }}" class="form-control course-edit-input_{{ course.c_id }}" placeholder="Course Price" value="{{ course.price }}">
+                        &ensp;
+                        <button class="btn btn-info edit_course_price" name="{{ course.c_id }}">Change</button>
+                    </form>
+                </span>
+                {% endif %}
+            </td>
+        <td style="width: 37.5%">
             <table class="table table-bordered table-striped">
                 {% for ingredient in course.ingredients %}
                 <tr>
-                    <td>
-                        <button class="btn btn-danger remove_ingredient_from_course hidden-admin-{{ course.c_id }}" style="display: none" name="{{ course.c_id }}_{{ ingredient.i_id }}">X</button>
+                    <td style="width: 16.666%">
+                        {% if admin %}
+                            <button class="btn btn-danger btn-sm remove_ingredient_from_course hidden-default-{{ course.c_id }}" style="display: none" name="{{ course.c_id }}_{{ ingredient.i_id }}">X</button>
+                        {% endif %}
                         {{ ingredient.i_name }}
                     </td> 
-                    <td class="{% if ingredient.available == "1" %}bg-success{% else %}bg-danger{% endif %}"></td>
+                    <td style="width: 8.333%" class="{% if ingredient.available == "1" %}bg-success{% else %}bg-danger{% endif %}"></td>
                 </tr>
                 {% endfor %}
             </table>
-            <form action="#" class="form-inline hidden-admin-{{ course.c_id }}" style="display: none" autocomplete="off">
-                <div class="autocomplete">
-                    <input type="text" id="autocomplete_ingredient-{{ course.c_id }}" class="form-control ingredient-input" name="ingredient_autocomplete" placeholder="ingredient">
-                </div>
-                <input type="button" id="button_autocomplete_ingredient-{{ course.c_id }}" style="display:inline" class="btn btn-success add_ingredient" name="{{ course.c_id }}" value="+">
-            </form>
+            {% if admin %}
+                <form action="#" class="form-inline hidden-default-{{ course.c_id }}" style="display: none" autocomplete="off">
+                    <div class="autocomplete">
+                        <input type="text" id="autocomplete_ingredient-{{ course.c_id }}" class="form-control ingredient-input" name="ingredient_autocomplete" placeholder="Ingredient">
+                    </div>
+                    <input type="button" id="button_autocomplete_ingredient-{{ course.c_id }}" style="display:inline" class="btn btn-success add_ingredient_to_course" name="{{ course.c_id }}" value="Add">
+                </form>
+            {% endif %}
         </td>
     </tr>
 {% endfor %}

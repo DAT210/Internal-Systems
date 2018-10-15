@@ -1,18 +1,4 @@
 
-/*
-var ingredients = [
-    "ingredient alpha",
-    "ingredient bravo",
-    "ingredient charlie",
-    "ingredient delta",
-    "ingredient echo",
-    "ingredient fractal",
-    "ingredient gamma",
-    "ingredient hector",
-    "ingredient indie",
-    "ingredient jodie"
-];
-*/
 
 var ingredients;
 var allergenes;
@@ -20,60 +6,20 @@ var allergenes;
 var authLevel = 2;
 
 $(document).ready(function() {
-    var visible = [];
+    var inEdit = [];
     init();
-    
-    function removeCourse() {
-        if (authLevel > 1) {
-            var info = $(this).prop("name").split("_");
-            
-            if (confirm("Are you sure you want to remove the course '" + info[0] + "'?")) {
-                $.get("/remove_course", {c_id: info[1]}, function (data) {
-                    $(".course_display").html(data);
-                    init();
-                });
-            }
-        } else {
-            alert("PERMISSION DENIED");
-        }
-    }
 
-    function removeIngredientFromCourse() {
-        if (authLevel > 1) {
-            var info = $(this).prop("name").split("_");
-            
-            if (confirm("Are you sure you want to remove this ingredient from the course?")) {
-                $.get("/remove_ingredient_from_course", {c_id: info[0], i_id: info[1]}, function (data) {
-                    $(".course_display").html(data);
-                    init();
-                });
-            }
-        } else {
-            alert("PERMISSION DENIED");
-        }
-    }
-
-    function addIngredientToCourse() {
-        if (authLevel > 1) {
-            var c_id = $(this).prop("id").split("-")[1];
-            var i_id = $("#autocomplete_ingredient_" + c_id).prop("name");
-
-            $.get("/add_ingredient_to_course", {c_id: c_id, i_id: i_id}, function (data) {
-                $(".course_display").html(data);
-                init();
-            });
-
-        } else {
-            alert("PERMISSION DENIED");
-        }
-    }
     
     function init() {
         updateAutocomplete();
-
+        
         $(".remove_course").on("click", removeCourse);
         $(".remove_ingredient_from_course").on("click", removeIngredientFromCourse);
-        $(".add_ingredient").on("click", addIngredientToCourse)
+        $(".add_ingredient_to_course").on("click", addIngredientToCourse);
+        $(".edit_course_name").on("click", editCourseName);
+        $(".edit_course_price").on("click", editCoursePrice);
+        
+        $("#add_course").on("click", addCourse);
 
         var ingredientInputs = $(".ingredient-input");
         for (var i = 0; i < ingredientInputs.length; i++) {
@@ -83,21 +29,76 @@ $(document).ready(function() {
             }
             autocomplete(ingredientInputs[i], ingredientsIn);
         }
-
-        for (var i = 0; i < visible.length; i++) {
-            if (visible[i]) {
-                $(".hidden_admin_" + i).css("display", "inline-block");
+    
+        for (var i = 0; i < inEdit.length; i++) {
+            if (inEdit[i]) {
+                $(".hidden-default-" + i).css("display", "inline-block");
+                $(".hidden-edit-" + i).css("display", "none");
             } else {
-                $(".hidden_admin_" + i).css("display", "none");
+                $(".hidden-default-" + i).css("display", "none");
+                $(".hidden-edit-" + i).css("display", "inline-block");
             }
         }
+        initAdminFunctions();
+    }
 
-        if (authLevel < 2) {
-            $(".edit_course").css("display", "none");
-        } else {
-            initAdminFunctions();
+    function addCourse() {
+        $.get("/add_course", function (data) {
+            $(".course_display").html(data);
+            init();
+        });
+    }
+
+    function removeCourse() {
+        var info = $(this).prop("name").split("_");
+        
+        if (confirm("Are you sure you want to remove the course '" + info[0] + "'?")) {
+            $.get("/remove_course", {c_id: info[1]}, function (data) {
+                $(".course_display").html(data);
+                init();
+            });
         }
     }
+
+    function removeIngredientFromCourse() {
+        var info = $(this).prop("name").split("_");
+        
+        if (confirm("Are you sure you want to remove this ingredient from the course?")) {
+            $.get("/remove_ingredient_from_course", {c_id: info[0], i_id: info[1]}, function (data) {
+                $(".course_display").html(data);
+                init();
+            });
+        }
+    }
+
+    function addIngredientToCourse() {
+        var c_id = $(this).prop("id").split("-")[1];
+        var i_id = $("#autocomplete_ingredient-" + c_id).prop("name");
+
+        $.get("/add_ingredient_to_course", {c_id: c_id, i_id: i_id}, function (data) {
+            $(".course_display").html(data);
+            init();
+        });
+    }
+
+    function editCourseName() {
+        var c_id = $(this).prop("name");
+        var c_name = $("#course-edit-name_" + c_id).val();
+        $.get("/edit_course_name", {c_id: c_id, c_name: c_name}, function (data) {
+            $(".course_display").html(data);
+            init();
+        });
+    }
+
+    function editCoursePrice() {
+        var c_id = $(this).prop("name");
+        var price = $("#course-edit-price_" + c_id).val();
+        $.get("/edit_course_price", {c_id: c_id, price: price}, function (data) {
+            $(".course_display").html(data);
+            init();
+        });
+    }
+    
 
     function updateAutocomplete() {
         // I don't know if there are any better solutions for these yet, but these requests
@@ -125,22 +126,20 @@ $(document).ready(function() {
     }
 
     function initAdminFunctions() {
-        if (authLevel < 2) {
-            alert("ACCESS DENIED");
-        } else {
-            $(".edit_course").css("display", "inline-block");
-            $(".edit_course").on("click", function() {
-                var id = $(this).prop("name").split("_")[1];
-                var idInt = parseInt(id);
-                if (visible[idInt]) {
-                    $(".hidden-admin-" + id).css("display", "none");
-                    visible[idInt] = false;
-                } else {
-                    $(".hidden-admin-" + id).css("display", "inline-block");
-                    visible[idInt] = true;
-                }
-            });
-        }
+        $(".edit_course").css("display", "inline-block");
+        $(".edit_course").on("click", function() {
+            var id = $(this).prop("name").split("_")[1];
+            var idInt = parseInt(id);
+            if (inEdit[idInt]) {
+                $(".hidden-default-" + id).css("display", "none");
+                $(".hidden-edit-" + id).css("display", "inline-block");
+                inEdit[idInt] = false;
+            } else {
+                $(".hidden-default-" + id).css("display", "inline-block");
+                $(".hidden-edit-" + id).css("display", "none");
+                inEdit[idInt] = true;
+            }
+        });
     }
 });
 
