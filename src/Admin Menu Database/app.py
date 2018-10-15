@@ -10,6 +10,7 @@ app = Flask(__name__)
 
 app.debug = True
 
+isAdmin = True
 
 # CHANGE THIS INFORMATION FOR YOUR DATABASE ACCESS OK
 user_info = {
@@ -49,7 +50,8 @@ def index():
     courses = get_courses(get_db())
     ingredients = get_ingredients(get_db())
     allergenes = get_allergenes(get_db()) # Maybe change name to triggers
-    return render_template("index.html", courses=courses, ingredients=ingredients, allergenes=allergenes)
+    return render_template("index.html", courses=courses, ingredients=ingredients, allergenes=allergenes, admin=isAdmin)
+
 
 ## DATABASE GET REQUEST REMOVE FUNCTIONS ##
 @app.route("/remove_course", methods=["GET"])
@@ -57,7 +59,7 @@ def remove_course_db():
     c_id = request.args.get("c_id", None)
     if c_id != None:
         remove_course(get_db(), c_id)
-    return render_template("course_display.html", courses=get_courses(get_db()))
+    return render_template("course_display.html", courses=get_courses(get_db()), admin=isAdmin)
 
 
 @app.route("/remove_ingredient_from_course", methods=["GET"])
@@ -66,7 +68,8 @@ def remove_ingredient_from_course_db():
     i_id = request.args.get("i_id", None)
     if c_id != None and i_id != None:
         remove_course_ingredient(get_db(), c_id, i_id)
-    return render_template("course_display.html", courses=get_courses(get_db()))
+    return render_template("course_display.html", courses=get_courses(get_db()), admin=isAdmin)
+
 
 ## DATABASE GET REQUEST GET FUNCTIONS ##
 @app.route("/get_ingredients", methods=["GET"])
@@ -80,15 +83,43 @@ def get_allergenes_db():
     allergenes = get_allergenes(get_db())
     return json.dumps(allergenes)
 
+
 ## DATABASE GET REQUEST INSERT FUNCTIONS ##
+@app.route("/add_course", methods=["GET"])
+def insert_course_db():
+    # FIX CATEGORY, ADD FUNCTIONALITY FOR THIS SOON
+    exception = insert_course(get_db(), "", 1, 0.0)
+    if exception.message:
+        print("\tEXCEPTION " + str(exception.code) + ": " + exception.message)
+    return render_template("course_display.html", courses=get_courses(get_db()), admin=isAdmin)
+
+
 @app.route("/add_ingredient_to_course", methods=["GET"])
-def insert_ingredient_to_course():
+def insert_course_ingredient_db():
     c_id = request.args.get("c_id", None)
     i_id = request.args.get("i_id", None)
     if c_id != None and i_id != None:
         insert_course_ingredient(get_db(), c_id, i_id)
-    return render_template("course_display.html", courses=get_courses(get_db()))
+    return render_template("course_display.html", courses=get_courses(get_db()), admin=isAdmin)
 
+
+## DATABASE GET REQUEST UPDATE FUNCTIONS ##
+@app.route("/edit_course_name", methods=["GET"])
+def update_course_name_db():
+    c_id = request.args.get("c_id", None)
+    c_name = request.args.get("c_name", None)
+    if c_id != None and c_name != None:
+        update_course_name(get_db(), c_name, c_id)
+    return render_template("course_display.html", courses=get_courses(get_db()), admin=isAdmin)
+
+
+@app.route("/edit_course_price", methods=["GET"])
+def update_course_price_db():
+    c_id = request.args.get("c_id", None)
+    price = request.args.get("price", None)
+    if c_id != None and price != None:
+        update_course_price(get_db(), price, c_id)
+    return render_template("course_display.html", courses=get_courses(get_db()), admin=isAdmin)
 
 
 if __name__ == "__main__":
