@@ -22,6 +22,8 @@ $(document).ready(function() {
         
         $(".edit_course_name").on("click", editCourseName);
         $(".edit_course_price").on("click", editCoursePrice);
+        $(".edit_course_category").on("click", editCourseCategory);
+        $(".edit_course_description").on("click", editCourseDescription);
         
         // EDIT INGREDIENT INFORMATION
         $("#add_ingredient").on("click", addIngredient);
@@ -168,7 +170,24 @@ $(document).ready(function() {
             init();
         });
     }
-    
+
+    function editCourseCategory() {
+        var c_id = $(this).prop("name");
+        var category = $("#course-edit-category_" + c_id).val();
+        $.get("/edit_course_category", {c_id: c_id, category: category}, function (data) {
+            $(".course_display").html(data);
+            init();
+        });
+    }
+
+    function editCourseDescription() {
+        var c_id = $(this).prop("name");
+        var description = $("#course-edit-description_" + c_id).val();
+        $.get("/edit_course_description", {c_id: c_id, description: description}, function (data) {
+            $(".course_display").html(data);
+            init();
+        });
+    }
 
     function updateAutocomplete() {
         // I don't know if there are any better solutions for these yet, but these requests
