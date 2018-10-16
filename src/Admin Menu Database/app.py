@@ -93,7 +93,6 @@ def insert_course_db():
         print("\tEXCEPTION " + str(exception.code) + ": " + exception.message)
     return render_template("course_display.html", courses=get_courses(get_db()), admin=isAdmin)
 
-
 @app.route("/add_ingredient_to_course", methods=["GET"])
 def insert_course_ingredient_db():
     c_id = request.args.get("c_id", None)
