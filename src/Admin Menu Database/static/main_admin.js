@@ -13,13 +13,26 @@ $(document).ready(function() {
     function init() {
         updateAutocomplete();
         
+        // EDIT COURSE INFORMATION
+        $("#add_course").on("click", addCourse);
         $(".remove_course").on("click", removeCourse);
-        $(".remove_ingredient_from_course").on("click", removeIngredientFromCourse);
+        
         $(".add_ingredient_to_course").on("click", addIngredientToCourse);
+        $(".remove_ingredient_from_course").on("click", removeIngredientFromCourse);
+        
         $(".edit_course_name").on("click", editCourseName);
         $(".edit_course_price").on("click", editCoursePrice);
         
-        $("#add_course").on("click", addCourse);
+        // EDIT INGREDIENT INFORMATION
+        $("#add_ingredient").on("click", addIngredient);
+        $(".remove_ingredient").on("click", removeIngredient);
+        
+        $(".add_allergene_to_ingredient").on("click", addAllergeneToIngredient);
+        $(".remove_allergene_from_ingrdient").on("click", removeAllergeneFromIngredient);
+
+        // EDIT ALLERGENE INFORMATION
+        $("#add_allergene").on("click", addAllergene);
+        $(".remove_allergene").on("click", removeAllergene);
 
         var ingredientInputs = $(".ingredient-input");
         for (var i = 0; i < ingredientInputs.length; i++) {
@@ -79,6 +92,63 @@ $(document).ready(function() {
             $(".course_display").html(data);
             init();
         });
+    }
+
+    function addIngredient() {
+        $.get("/add_ingredient", function (data) {
+            $(".ingredient_display").html(data);
+            init();
+        });
+    }
+    
+    function removeIngredient() {
+        var info = $(this).prop("name".split("_"));
+    
+        if (confirm("Are you sure you want to remove the ingredient '" + info[0] + "'?")) {
+            $.get("/remove_ingredient", {i_id: info[1]}, function (data) {
+                $(".ingredient_display").html(data);
+                init();
+            });
+        }
+    }
+
+    function addAllergeneToIngredient() {
+        var i_id = $(this).prop("id").split("-")[1];
+        var a_id = $("#autocomplete_allergene-" + i_id).prop("name");
+
+        $.get("/add_allergene_to_course", {i_id: i_id, a_id: a_id}, function (data) {
+            $(".ingredient_display").html(data);
+            init();
+        });
+    }
+
+    function removeAllergeneFromIngredient() {
+        var info = $(this).prop("name").split("_");
+        
+        if (confirm("Are you sure you want to remove this allergene from the ingredient?")) {
+            $.get("/remove_ingredient_from_course", {i_id: info[0], a_id: info[1]}, function (data) {
+                $(".ingredient_display").html(data);
+                init();
+            });
+        }
+    }
+
+    function addAllergene() {
+        $.get("/add_allergene", function (data) {
+            $(".allergene_display").html(data);
+            init();
+        });
+    }
+    
+    function removeAllergene() {
+        var info = $(this).prop("name".split("_"));
+    
+        if (confirm("Are you sure you want to remove the allergene '" + info[0] + "'?")) {
+            $.get("/remove_allergene", {a_id: info[1]}, function (data) {
+                $(".allergene_display").html(data);
+                init();
+            });
+        }
     }
 
     function editCourseName() {

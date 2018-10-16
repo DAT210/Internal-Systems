@@ -10,13 +10,13 @@
                 ID
             </th>
             <th>
-                Name
-            </th>
-            <th>
-                Price
+                Info
             </th>
             <th>
                 Ingredients
+            </th>
+            <th>
+                Options
             </th>
         </thead>
         <tbody class="course_display">
@@ -50,10 +50,17 @@
             </th>
         </thead>
         <tbody class="ingredient_display">
-
             {% include "ingredient_display.html" %}
-
         </tbody>
+        {% if admin %}
+        <tr>
+            <td colspan="4">
+                <div class="row justify-content-center">
+                    <button class="btn btn-success btn-lg col-4" id="add_ingredient">Add New Ingredient</button>
+                </div>
+            </td>
+        </tr>
+        {% endif %} 
     </table>
     <h2>Allergenes</h2>
     <table class="table table-bordered table-striped">
@@ -66,9 +73,16 @@
             </th>
         </thead>
         <tbody class="allergene_display">
-            
             {% include "allergene_display.html" %}
-
         </tbody>
+        {% if admin %}
+        <tr>
+            <td colspan="4">
+                <div class="row justify-content-center">
+                    <button class="btn btn-success btn-lg col-4" id="add_allergene">Add New Allergene</button>
+                </div>
+            </td>
+        </tr>
+        {% endif %} 
     </table>
 {% endblock %}
