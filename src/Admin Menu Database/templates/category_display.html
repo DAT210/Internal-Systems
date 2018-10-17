@@ -1,0 +1,10 @@
+{% for _, category in categories.items() %}
+    <tr>
+        <td>
+            {{ category.ca_id }}
+        </td>
+        <td>
+            <h4>{{ category.ca_name }}</h4>
+        </td>
+    </tr>
+{% endfor %}

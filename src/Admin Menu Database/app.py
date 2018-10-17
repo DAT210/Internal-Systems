@@ -50,7 +50,8 @@ def index():
     courses = get_courses(get_db())
     ingredients = get_ingredients(get_db())
     allergenes = get_allergenes(get_db()) # Maybe change name to triggers
-    return render_template("index.html", courses=courses, ingredients=ingredients, allergenes=allergenes, admin=isAdmin)
+    categories = get_categories(get_db())
+    return render_template("index.html", courses=courses, ingredients=ingredients, allergenes=allergenes, categories=categories, admin=isAdmin)
 
 
 ## DATABASE GET REQUEST REMOVE FUNCTIONS ##
@@ -82,6 +83,12 @@ def get_ingredients_db():
 def get_allergenes_db():
     allergenes = get_allergenes(get_db())
     return json.dumps(allergenes)
+
+
+@app.route("/get_categories", methods=["GET"])
+def get_categories_db():
+    categories = get_categories(get_db())
+    return json.dumps(categories)
 
 
 ## DATABASE GET REQUEST INSERT FUNCTIONS ##
@@ -118,6 +125,15 @@ def update_course_price_db():
     price = request.args.get("price", None)
     if c_id != None and price != None:
         update_course_price(get_db(), price, c_id)
+    return render_template("course_display.html", courses=get_courses(get_db()), admin=isAdmin)
+
+
+@app.route("/edit_course_category", methods=["GET"])
+def update_course_category_db():
+    c_id = request.args.get("c_id", None)
+    category = request.args.get("category", None)
+    if c_id != None and category != None:
+        update_course_category(get_db(), category, c_id)
     return render_template("course_display.html", courses=get_courses(get_db()), admin=isAdmin)
 
 

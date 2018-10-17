@@ -24,18 +24,18 @@
                         </td>
                         <td>
                             {% if admin %}
-                            <span class="hidden-edit-{{ course.c_id }}">
+                                <span class="hidden-edit-{{ course.c_id }}">
                                 {% endif %}
-                                {{ course.c_name }}
+                                    {{ course.c_name }}
                                 {% if admin %}
-                            </span>
-                            <span class="hidden-default-{{ course.c_id }}" style="display: none">
-                                <form action="#" class="form-inline">
-                                    <input type="text" id="course-edit-name_{{ course.c_id }}" class="form-control course-edit-input_{{ course.c_id }} input-sm" placeholder="Course Name" value="{{ course.c_name }}">
-                                    &ensp;
-                                    <button class="btn btn-info edit_course_name" name="{{ course.c_id }}">Change</button>
-                                </form>
-                            </span>
+                                </span>
+                                <span class="hidden-default-{{ course.c_id }}" style="display: none">
+                                    <form action="#" class="form-inline">
+                                        <input type="text" id="course-edit-name_{{ course.c_id }}" class="form-control course-edit-input_{{ course.c_id }} input-sm" placeholder="Course Name" value="{{ course.c_name }}">
+                                        &ensp;
+                                        <button class="btn btn-info edit_course_name" name="{{ course.c_id }}">Change</button>
+                                    </form>
+                                </span>
                             {% endif %}
                         </td>
                     </tr>
@@ -70,13 +70,14 @@
                         </td>
                         <td>
                             <span class="hidden-edit-{{ course.c_id }}">
-                                {{ course.category }}
+                                {{ categories[course.ca_id].ca_name }}
                             </span>
                             <span class="hidden-default-{{ course.c_id }}" style="display: none">
-                                <form action="#" class="form-inline">
-                                    <input type="text" id="course-edit-category_{{ course.c_id }}" class="form-control course-edit-category_{{ course.c_id }} input-sm" placeholder="Course Category" value="{{ course.category }}">
-                                    &ensp;
-                                    <button class="btn btn-info edit_course_category" name="{{ course.c_id }}">Change</button>
+                                <form action="#" class="form-inline hidden-default-{{ course.c_id }}" style="display: none" autocomplete="off">
+                                    <div class="autocomplete">
+                                        <input type="text" id="autocomplete-course-edit-category_{{ course.c_id }}" class="form-control course-edit-category-input" name="course_edit_category_autocomplete" placeholder="Category" value="{{ categories[course.ca_id].ca_name }}">
+                                    </div>
+                                    <input type="button" id="button-autocomplete-course-edit-category_{{ course.c_id }}" style="display:inline" class="btn btn-info edit_course_category" name="{{ course.c_id }}" value="Change">
                                 </form>
                             </span>
                         </td>
@@ -89,11 +90,11 @@
                         </td>
                         <td>
                             <span class="hidden-edit-{{ course.c_id }}">
-                                {{ course.description }}
+                                {{ course.info }}
                             </span>
                             <span class="hidden-default-{{ course.c_id }}" style="display: none">
                                 <form action="#" class="form-inline">
-                                    <input type="text" id="course-edit-description_{{ course.c_id }}" class="form-control course-edit-description_{{ course.c_id }} input-sm" placeholder="Course Description" value="{{ course.description }}">
+                                    <input type="text" id="course-edit-description_{{ course.c_id }}" class="form-control course-edit-description_{{ course.c_id }} input-sm" placeholder="Course Description" value="{{ course.info }}">
                                     &ensp;
                                     <button class="btn btn-info edit_course_description" name="{{ course.c_id }}">Change</button>
                                 </form>
