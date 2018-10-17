@@ -5,7 +5,7 @@ from exceptions import *
 
 remove_queries = {
     # Delete a course by c_id
-    "remove_course": ["DELETE FROM course_ingredient WHERE c_id = {c_id}", "DELETE FROM course WHERE c_id = {c_id}"],
+    "remove_course": ["DELETE FROM course_ingredient WHERE c_id = {c_id}", "DELETE FROM course_selection WHERE c_id = {c_id}", "DELETE FROM course WHERE c_id = {c_id}"],
 
     # Delete an ingredient by i_id
     "remove_ingredient": ["DELETE FROM course_ingredient WHERE i_id = {i_id}", "DELETE FROM ingredient_allergene WHERE i_id = {i_id}", "DELETE FROM ingredient WHERE i_id = {i_id}"],

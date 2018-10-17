@@ -16,9 +16,9 @@ insert_queries = {
 
     "insert_category": "INSERT INTO category (ca_name) VALUES ('{ca_name}')",
 
-    "insert_course_ingredient": "INSERT INTO course_ingredient (c_id, i_id) VALUES ({c_id}, {i_id})",
+    "insert_course_ingredient": "INSERT INTO course_ingredient (c_id, i_id) VALUES ('{c_id}', '{i_id}')",
 
-    "insert_ingredient_allergene": "INSERT INTO ingredient_allergene (i_id, a_id) VALUES ({i_id}, {a_id})"
+    "insert_ingredient_allergene": "INSERT INTO ingredient_allergene (i_id, a_id) VALUES ('{i_id}', '{a_id}')"
 }
 
 def insert_course(db, c_name, ca_id, price):

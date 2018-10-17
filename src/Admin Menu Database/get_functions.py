@@ -136,8 +136,6 @@ def get_allergenes_by_ingredient(db, i_id):
 def get_categories(db):
     cur = db.cursor()
     categories = []
-    # DEBUG FOR DICTIONARY STRUCTURE
-    categories2 = {}
 
     try:
         cur.execute(get_queries["get_categories"])
@@ -146,11 +144,23 @@ def get_categories(db):
                 "ca_id": str(ca_id),
                 "ca_name": str(ca_name)
             })
-            # DEBUG FOR DICTIONARY STRUCTURE
-            categories2[str(ca_id)] = {
+
+        return categories
+    finally:
+        cur.close()
+
+def get_categories_dictionairy(db):
+    cur = db.cursor()
+    categories = {}
+
+    try:
+        cur.execute(get_queries["get_categories"])
+        for (ca_id, ca_name) in cur:
+            categories[str(ca_id)] = {
                 "ca_id": str(ca_id),
                 "ca_name": str(ca_name)
             }
-        return categories2
+        return categories
     finally:
         cur.close()
+
