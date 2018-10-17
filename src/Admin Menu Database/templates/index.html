@@ -85,4 +85,27 @@
         </tr>
         {% endif %} 
     </table>
+    <h2>Categories</h2>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <th>
+                ID
+            </th>
+            <th>
+                Name
+            </th>
+        </thead>
+        <tbody class="category_display">
+            {% include "category_display.html" %}
+        </tbody>
+        {% if admin %}
+        <tr>
+            <td colspan="4">
+                <div class="row justify-content-center">
+                    <button class="btn btn-success btn-lg col-4" id="add_category">Add New Category</button>
+                </div>
+            </td>
+        </tr>
+        {% endif %} 
+    </table>
 {% endblock %}

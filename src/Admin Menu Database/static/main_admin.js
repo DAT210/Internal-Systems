@@ -2,6 +2,8 @@
 
 var ingredients;
 var allergenes;
+var categories;
+var options;
 
 var authLevel = 2;
 
@@ -23,19 +25,22 @@ $(document).ready(function() {
         $(".edit_course_name").on("click", editCourseName);
         $(".edit_course_price").on("click", editCoursePrice);
         $(".edit_course_category").on("click", editCourseCategory);
+
+        var courseEditCategoryInputs = $(".course-edit-category-input");
+        for (var i = 0; i < courseEditCategoryInputs; i++) {
+            var courseEditCategoryIn = [];
+            for (var j = 0; j < categories.length; j++) {
+                courseEditCategoryIn.push(categories[i].ca_name);
+            }
+            autocomplete(courseEditCategoryInputs[i], courseEditCategoryIn);
+        }
+
         $(".edit_course_description").on("click", editCourseDescription);
         
         // EDIT INGREDIENT INFORMATION
         $("#add_ingredient").on("click", addIngredient);
         $(".remove_ingredient").on("click", removeIngredient);
         
-        $(".add_allergene_to_ingredient").on("click", addAllergeneToIngredient);
-        $(".remove_allergene_from_ingrdient").on("click", removeAllergeneFromIngredient);
-
-        // EDIT ALLERGENE INFORMATION
-        $("#add_allergene").on("click", addAllergene);
-        $(".remove_allergene").on("click", removeAllergene);
-
         var ingredientInputs = $(".ingredient-input");
         for (var i = 0; i < ingredientInputs.length; i++) {
             var ingredientsIn = [];
@@ -44,7 +49,19 @@ $(document).ready(function() {
             }
             autocomplete(ingredientInputs[i], ingredientsIn);
         }
-    
+
+        // TODO: Implement this in Jinja template
+        $(".add_allergene_to_ingredient").on("click", addAllergeneToIngredient);
+        $(".remove_allergene_from_ingredient").on("click", removeAllergeneFromIngredient);
+
+        // EDIT ALLERGENE INFORMATION
+        $("#add_allergene").on("click", addAllergene);
+        $(".remove_allergene").on("click", removeAllergene);
+
+        
+
+
+
         for (var i = 0; i < inEdit.length; i++) {
             if (inEdit[i]) {
                 $(".hidden-default-" + i).css("display", "inline-block");
@@ -172,6 +189,7 @@ $(document).ready(function() {
     }
 
     function editCourseCategory() {
+        // TODO: FIX
         var c_id = $(this).prop("name");
         var category = $("#course-edit-category_" + c_id).val();
         $.get("/edit_course_category", {c_id: c_id, category: category}, function (data) {
@@ -212,6 +230,19 @@ $(document).ready(function() {
                 allergenes = JSON.parse(data);
             }
         });
+
+        // Update Categories
+        $.ajax({
+            url: "/get_categories",
+            type: "get",
+            async: false,
+            success: function(data) {
+                categories = JSON.parse(data);
+            }
+        });
+
+        // Update Options
+        // TODO: Implement
     }
 
     function initAdminFunctions() {
