@@ -1,10 +1,13 @@
 from flask import Flask, render_template, request, g, redirect, url_for
 import json
+import string
 import mysql.connector
 from get_functions import *
 from remove_functions import *
 from insert_functions import *
 from update_functions import *
+
+# Sindre Hvidsten
 
 app = Flask(__name__)
 
@@ -58,7 +61,6 @@ def index():
 @app.route("/remove_course", methods=["GET"])
 def remove_course_db():
     c_id = request.args.get("c_id", None)
-    print(c_id)
     if c_id != None:
         remove_course(get_db(), c_id)
     return render_template("course_display.html", courses=get_courses(get_db()), categories=get_categories_dictionairy(get_db()), admin=isAdmin)
@@ -91,17 +93,34 @@ def get_categories_db():
     categories = get_categories(get_db())
     return json.dumps(categories)
 
+CHARS = list(string.ascii_lowercase)
 
 ## DATABASE GET REQUEST INSERT FUNCTIONS ##
 @app.route("/add_course", methods=["GET"])
 def insert_course_db():
+    insert_course(get_db(), "", 1, "No description available.", 1.0)
 
-    # FIX CATEGORY, ADD FUNCTIONALITY FOR THIS SOON
+    courses = get_courses(get_db())
+    new_course_id = courses[len(courses) - 1]["c_id"]
 
-    exception = insert_course(get_db(), "", 1, 0.0)
-    if exception != None:
-        print("\tEXCEPTION " + str(exception.code) + ": " + exception.message)
-    return render_template("course_display.html", courses=get_courses(get_db()), categories=get_categories_dictionairy(get_db()), admin=isAdmin)
+    unique_string = convert_number_to_unique_char_sequence(int(new_course_id))
+
+    update_course_name(get_db(), "course " + unique_string, new_course_id)
+
+    categories = get_categories_dictionairy(get_db())
+
+    return render_template("course_display.html", courses=get_courses(get_db()), categories=categories, admin=isAdmin)
+
+
+def convert_number_to_unique_char_sequence(number):
+    number -= 1
+    char_sequence = []
+    while number > 0:
+        char_sequence.append(CHARS[number % 26])
+        number //= 26
+    char_sequence.reverse()
+    return ''.join(char_sequence)
+
 
 @app.route("/add_ingredient_to_course", methods=["GET"])
 def insert_course_ingredient_db():

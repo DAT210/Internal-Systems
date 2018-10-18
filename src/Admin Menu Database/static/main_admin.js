@@ -1,4 +1,6 @@
 
+// Sindre Hvidsten
+ 
 /********************************\
 | GLOBAL VARIABLE INITIALIZATION | 
 \********************************/
@@ -38,10 +40,10 @@ $(document).ready(function() {
     }
 
     function initAdminFunctions() {
-        // Admin Functions
+        initCourseAdminFunctions();
     }
 
-    function initEdit() {
+    function initEditCourse() {
         for (var i = 0; i < inEdit.length; i++) {
             if (inEdit[i] === true) {
                 $(".hidden-default-" + i).css("display", "inline");
@@ -69,8 +71,7 @@ $(document).ready(function() {
     }
     
     function initCourses() {
-        initEdit();
-        $("#add_course").on("click", addCourse);
+        initEditCourse();
         $(".remove_course").on("click", removeCourse);
         
         $(".add_ingredient_to_course").on("click", addIngredientToCourse);
@@ -85,8 +86,11 @@ $(document).ready(function() {
         setupAutocomplete(".ingredient-input", ingredients, "i_name", "i_id");
     }
 
+    function initCourseAdminFunctions() {
+        $("#add_course").on("click", addCourse);
+    }
+
     function initIngredients() {
-        initEdit();
         $("#add_ingredient").on("click", addIngredient);
         $(".remove_ingredient").on("click", removeIngredient);
 
@@ -95,19 +99,16 @@ $(document).ready(function() {
     }
 
     function initAllergenes() {
-        initEdit();
         $("#add_allergene").on("click", addAllergene);
         $(".remove_allergene").on("click", removeAllergene);    
     }
 
     function initCategories() {
-        initEdit();
         $("#add_category").on("click", addCategory);
         $(".remove_category").on("click", removeCategory);  
     }
 
     function initSelections() {
-        initEdit();
         $("#add_selection").on("click", addSelection);
         $(".remove_selection").on("click", removeSelection);  
     }
@@ -267,7 +268,6 @@ $(document).ready(function() {
         $.get("/edit_course_name", {c_id: c_id, c_name: c_name}, function (data) {
             $(".course_display").html(data);
             initCourses();
-            console.log(inEdit);
         });
     }
 

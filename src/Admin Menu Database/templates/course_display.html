@@ -132,17 +132,17 @@
                 </span>
             {% endif %}
         </td>
-        <!-- Options -->
+        <!-- Selections -->
         <!-- TODO: IMPLEMENT -->
         <td style="width: 31.25%">
             <table class="table table-bordered table-striped">
-                {% for option in course.options %}
+                {% for selection in course.selections %}
                 <tr>
                     <td style="width: 16.666%">
                         {% if admin %}
-                            <button class="btn btn-danger btn-sm remove_option_from_course hidden-default-{{ course.c_id }}" style="display: none" name="{{ course.c_id }}_{{ option.o_id }}">X</button>
+                            <button class="btn btn-danger btn-sm remove_option_from_course hidden-default-{{ course.c_id }}" style="display: none" name="{{ course.c_id }}_{{ selection.s_id }}">X</button>
                         {% endif %}
-                        {{ option.o_name }}
+                        {{ selection.s_name }}
                     </td> 
                 </tr>
                 {% endfor %}
@@ -150,9 +150,9 @@
             {% if admin %}
                 <form action="#" class="form-inline hidden-default-{{ course.c_id }}" style="display: none" autocomplete="off">
                     <div class="autocomplete">
-                        <input type="text" id="autocomplete_option-{{ course.c_id }}" class="form-control option-input" name="option_autocomplete" placeholder="Option">
+                        <input type="text" id="autocomplete_selection-{{ course.c_id }}" class="form-control selection-input" name="selection_autocomplete" placeholder="Selection">
                     </div>
-                    <input type="button" id="button_autocomplete_option-{{ course.c_id }}" style="display:inline" class="btn btn-success add_option_to_course" name="{{ course.c_id }}" value="Add">
+                    <input type="button" id="button_autocomplete_selection-{{ course.c_id }}" style="display:inline" class="btn btn-success add_selection_to_course" name="{{ course.c_id }}" value="Add">
                 </form>
             {% endif %}
         </td>
