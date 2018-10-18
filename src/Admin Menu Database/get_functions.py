@@ -21,7 +21,16 @@ get_queries = {
     "get_allergenes": "SELECT a_id, a_name FROM allergene",
 
     # Get all categories
-    "get_categories": "SELECT ca_id, ca_name FROM category"
+    "get_categories": "SELECT ca_id, ca_name FROM category",
+
+    # Get all selections
+    "get_selections": "SELECT s_id, s_name, sc_id, i_id",
+
+    # Get all course selections by c_id
+    "get_selections_by_course": "SELECT s.s_id, s_name FROM selection AS s INNER JOIN course_selection AS sc ON s.s_id=sc.s_id WHERE c_id={c_id}",
+
+    # Get all selection categories
+    "get_selection_categories": "SELECT sc_id, sc_name FROM selection_category"
 }
 
 def get_courses(db):
@@ -37,13 +46,16 @@ def get_courses(db):
                 "ca_id": str(ca_id),
                 "info": str(info),
                 "price": str(price),
-                "ingredients": []
+                "ingredients": [],
+                "selections": []
             })
     finally:
         cur.close()
 
     for c in courses:
         c["ingredients"] = get_ingredients_by_course(db, c["c_id"])
+    for c in courses:
+        c["selections"] = get_selections_by_course(db, c["c_id"])
     return courses
 
 
@@ -133,6 +145,7 @@ def get_allergenes_by_ingredient(db, i_id):
     finally:
         cur.close()
 
+
 def get_categories(db):
     cur = db.cursor()
     categories = []
@@ -149,6 +162,7 @@ def get_categories(db):
     finally:
         cur.close()
 
+
 def get_categories_dictionairy(db):
     cur = db.cursor()
     categories = {}
@@ -164,3 +178,17 @@ def get_categories_dictionairy(db):
     finally:
         cur.close()
 
+
+def get_selections(db):
+    # TODO: Implement
+    return []
+
+
+def get_selections_by_course(db, c_id):
+    # TODO: Implement
+    return []
+
+
+def get_selection_categories(db):
+    # TODO: Implement
+    return []
