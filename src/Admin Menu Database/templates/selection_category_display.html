@@ -1,0 +1,10 @@
+{% for selection_category in selection_categories %}
+    <tr>
+        <td>
+            {{ selection_category.sc_id }}
+        </td>
+        <td>
+            <h4>{{ selection_category.sc_name }}</h4>
+        </td>
+    </tr>
+{% endfor %}

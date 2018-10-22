@@ -8,7 +8,22 @@ var ingredients = [];
 var allergenes = [];
 var categories = [];
 var options = [];
-var inEdit = [];
+
+var inEditCourse = [];
+var inEditIngredient = [];
+var inEditAllergene = [];
+var inEditCategory = [];
+var inEditSelection = [];
+var inEditSelectionCategory = [];
+
+var inEdit = {
+    course: {editName: ".edit_course", isEdit: []},
+    ingredient: {editName: ".edit_ingredient", isEdit: []},
+    allergene: {editName: ".edit_allergene", isEdit: []},
+    category: {editName: ".edit_category", isEdit: []},
+    selection: {editName: ".edit_selection", isEdit: []},
+    selectionCategory: {editName: ".edit_selection_category", isEdit: []}
+}
 
 var authLevel = 2;
 
@@ -29,6 +44,7 @@ $(document).ready(function() {
         initAllergenes();
         initCategories();
         initSelections();
+        initSelectionCategories();
         initAdminFunctions();
     }
 
@@ -41,33 +57,11 @@ $(document).ready(function() {
 
     function initAdminFunctions() {
         initCourseAdminFunctions();
-    }
-
-    function initEditCourse() {
-        for (var i = 0; i < inEdit.length; i++) {
-            if (inEdit[i] === true) {
-                $(".hidden-default-" + i).css("display", "inline");
-                $(".hidden-edit-" + i).css("display", "none");
-            } else if (inEdit[i] === false) {
-                $(".hidden-default-" + i).css("display", "none");
-                $(".hidden-edit-" + i).css("display", "inline");
-            }
-        }
-
-        $(".edit_course").css("display", "inline-block");
-        $(".edit_course").on("click", function() {
-            var id = $(this).prop("name").split("_")[1];
-            var idInt = parseInt(id);
-            if (inEdit[idInt]) {
-                $(".hidden-default-" + id).css("display", "none");
-                $(".hidden-edit-" + id).css("display", "inline");
-                inEdit[idInt] = false;
-            } else {
-                $(".hidden-default-" + id).css("display", "inline");
-                $(".hidden-edit-" + id).css("display", "none");
-                inEdit[idInt] = true;
-            }
-        });
+        initIngredientAdminFunctions();
+        initAllergeneAdminFunctions();
+        initCategoryAdminFunctions();
+        initSelectionAdminFunctions();
+        initSelectionCategoryAdminFunctions();
     }
     
     function initCourses() {
@@ -85,46 +79,92 @@ $(document).ready(function() {
         setupAutocomplete(".course-edit-category-input", categories, "ca_name", "ca_id");
         setupAutocomplete(".ingredient-input", ingredients, "i_name", "i_id");
     }
-
-    function initCourseAdminFunctions() {
-        $("#add_course").on("click", addCourse);
-    }
-
+    
     function initIngredients() {
-        $("#add_ingredient").on("click", addIngredient);
+        initEditIngredient();
         $(".remove_ingredient").on("click", removeIngredient);
-
+        
         $(".add_allergene_to_ingredient").on("click", addAllergeneToIngredient);
         $(".remove_allergene_from_ingredient").on("click", removeAllergeneFromIngredient);
     }
-
+    
     function initAllergenes() {
-        $("#add_allergene").on("click", addAllergene);
+        initEditAllergene();
         $(".remove_allergene").on("click", removeAllergene);    
     }
-
+    
     function initCategories() {
-        $("#add_category").on("click", addCategory);
+        initEditCategory();
         $(".remove_category").on("click", removeCategory);  
     }
-
+    
     function initSelections() {
-        $("#add_selection").on("click", addSelection);
+        initEditSelection();
         $(".remove_selection").on("click", removeSelection);  
     }
+    
+    function initSelectionCategories() {
+        initEditSelectionCategory();
+        $(".remove_selection_category").on("click", removeSelectionCategory);  
+    }
+    
+    function initCourseAdminFunctions() {
+        $("#add_course").on("click", addCourse);
+    }
+    
+    function initIngredientAdminFunctions() {
+        $("#add_ingredient").on("click", addIngredient);
+    }
+    
+    function initAllergeneAdminFunctions() {
+        $("#add_allergene").on("click", addAllergene);
+    }
+    
+    function initCategoryAdminFunctions() {
+        $("#add_category").on("click", addCategory);
+    }
+    
+    function initSelectionAdminFunctions() {
+        $("#add_selection").on("click", addSelection);
+    }
+    
+    function initSelectionCategoryAdminFunctions() {
+        $("#add_selection_category").on("click", addSelectionCategory);
+    }
 
-    function setupAutocomplete(inputString, dict, nameParamater, idParameter) {
-        var inputs = $(inputString);
-        for (var i = 0; i < inputs.length; i++) {
-            var arrayIn = [];
-            for (var j = 0; j < dict.length; j++) {
-                arrayIn.push({
-                    name: dict[j][nameParamater],
-                    id: dict[j][idParameter] 
-                });
-            }
-            autocomplete(inputs[i], arrayIn);
+    function initEdit(param) {
+        var name = inEdit[param].editName;
+
+        for (var i = 0; i < inEdit[param].isEdit.length; i++) {
+            // TODO: Implement
         }
+    }
+    
+    function initEditCourse() {
+        for (var i = 0; i < inEditCourse.length; i++) {
+            if (inEditCourse[i] === true) {
+                $(".hidden-default-" + i).css("display", "inline");
+                $(".hidden-edit-" + i).css("display", "none");
+            } else if (inEditCourse[i] === false) {
+                $(".hidden-default-" + i).css("display", "none");
+                $(".hidden-edit-" + i).css("display", "inline");
+            }
+        }
+
+        $(".edit_course").css("display", "inline-block");
+        $(".edit_course").on("click", function() {
+            var id = $(this).prop("name").split("_")[1];
+            var idInt = parseInt(id);
+            if (inEditCourse[idInt]) {
+                $(".hidden-default-" + id).css("display", "none");
+                $(".hidden-edit-" + id).css("display", "inline");
+                inEditCourse[idInt] = false;
+            } else {
+                $(".hidden-default-" + id).css("display", "inline");
+                $(".hidden-edit-" + id).css("display", "none");
+                inEditCourse[idInt] = true;
+            }
+        });
     }
 
     /************************\
@@ -139,7 +179,6 @@ $(document).ready(function() {
 
     function removeCourse() {
         var info = $(this).prop("name").split("_");
-        
         if (confirm("Are you sure you want to remove the course '" + info[0] + "'?")) {
             $.get("/remove_course", {c_id: info[1]}, function (data) {
                 $(".course_display").html(data);
@@ -162,7 +201,6 @@ $(document).ready(function() {
     function addIngredientToCourse() {
         var c_id = $(this).prop("id").split("-")[1];
         var i_id = $("#autocomplete_ingredient-" + c_id).prop("name");
-
         $.get("/add_ingredient_to_course", {c_id: c_id, i_id: i_id}, function (data) {
             $(".course_display").html(data);
             initCourses();
@@ -178,7 +216,6 @@ $(document).ready(function() {
     
     function removeIngredient() {
         var info = $(this).prop("name".split("_"));
-    
         if (confirm("Are you sure you want to remove the ingredient '" + info[0] + "'?")) {
             $.get("/remove_ingredient", {i_id: info[1]}, function (data) {
                 $(".ingredient_display").html(data);
@@ -190,7 +227,6 @@ $(document).ready(function() {
     function addAllergeneToIngredient() {
         var i_id = $(this).prop("id").split("-")[1];
         var a_id = $("#autocomplete_allergene-" + i_id).prop("name");
-
         $.get("/add_allergene_to_course", {i_id: i_id, a_id: a_id}, function (data) {
             $(".ingredient_display").html(data);
             initIngredients();
@@ -199,7 +235,6 @@ $(document).ready(function() {
 
     function removeAllergeneFromIngredient() {
         var info = $(this).prop("name").split("_");
-        
         if (confirm("Are you sure you want to remove this allergene from the ingredient?")) {
             $.get("/remove_ingredient_from_course", {i_id: info[0], a_id: info[1]}, function (data) {
                 $(".ingredient_display").html(data);
@@ -217,7 +252,6 @@ $(document).ready(function() {
     
     function removeAllergene() {
         var info = $(this).prop("name".split("_"));
-    
         if (confirm("Are you sure you want to remove the allergene '" + info[0] + "'?")) {
             $.get("/remove_allergene", {a_id: info[1]}, function (data) {
                 $(".allergene_display").html(data);
@@ -235,7 +269,6 @@ $(document).ready(function() {
     
     function removeCategory() {
         var info = $(this).prop("name".split("_"));
-    
         if (confirm("Are you sure you want to remove the category '" + info[0] + "'?")) {
             $.get("/remove_category", {a_id: info[1]}, function (data) {
                 $(".category_display").html(data);
@@ -253,7 +286,6 @@ $(document).ready(function() {
     
     function removeSelection() {
         var info = $(this).prop("name".split("_"));
-    
         if (confirm("Are you sure you want to remove the selection '" + info[0] + "'?")) {
             $.get("/remove_selection", {a_id: info[1]}, function (data) {
                 $(".selection_display").html(data);
@@ -283,7 +315,6 @@ $(document).ready(function() {
     function editCourseCategory() {
         var c_id = $(this).prop("id").split("-")[1];
         var ca_id = $("#autocomplete_course_edit_category-" + c_id).prop("name");
-
         $.get("/edit_course_category", {c_id: c_id, ca_id: ca_id}, function (data) {
             $(".course_display").html(data);
             initCourses();
@@ -342,6 +373,20 @@ $(document).ready(function() {
 /*************************\
 | MISCELLANIOUS FUNCTIONS | 
 \*************************/
+
+function setupAutocomplete(inputString, dict, nameParamater, idParameter) {
+    var inputs = $(inputString);
+    for (var i = 0; i < inputs.length; i++) {
+        var arrayIn = [];
+        for (var j = 0; j < dict.length; j++) {
+            arrayIn.push({
+                name: dict[j][nameParamater],
+                id: dict[j][idParameter] 
+            });
+        }
+        autocomplete(inputs[i], arrayIn);
+    }
+}
 
 // GOTTEN FROM W3 SCHOOLS, BUT IT WORKS SO OKAY
 function autocomplete(inp, arr) {
