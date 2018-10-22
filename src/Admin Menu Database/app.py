@@ -53,8 +53,10 @@ def index():
     courses = get_courses(get_db())
     ingredients = get_ingredients(get_db())
     allergenes = get_allergenes(get_db())
-    categories = get_categories_dictionairy(get_db())
-    return render_template("index.html", courses=courses, ingredients=ingredients, allergenes=allergenes, categories=categories, admin=isAdmin)
+    categories = get_categories_dictionary(get_db())
+    selections = get_selections(get_db())
+    selection_categories = get_selection_categories(get_db())
+    return render_template("index.html", courses=courses, ingredients=ingredients, allergenes=allergenes, categories=categories, selections=selections, selection_categories=selection_categories, admin=isAdmin)
 
 
 ## DATABASE GET REQUEST REMOVE FUNCTIONS ##
@@ -63,7 +65,7 @@ def remove_course_db():
     c_id = request.args.get("c_id", None)
     if c_id != None:
         remove_course(get_db(), c_id)
-    return render_template("course_display.html", courses=get_courses(get_db()), categories=get_categories_dictionairy(get_db()), admin=isAdmin)
+    return render_template("course_display.html", courses=get_courses(get_db()), categories=get_categories_dictionary(get_db()), admin=isAdmin)
 
 
 @app.route("/remove_ingredient_from_course", methods=["GET"])
@@ -72,7 +74,7 @@ def remove_ingredient_from_course_db():
     i_id = request.args.get("i_id", None)
     if c_id != None and i_id != None:
         remove_course_ingredient(get_db(), c_id, i_id)
-    return render_template("course_display.html", courses=get_courses(get_db()), categories=get_categories_dictionairy(get_db()), admin=isAdmin)
+    return render_template("course_display.html", courses=get_courses(get_db()), categories=get_categories_dictionary(get_db()), admin=isAdmin)
 
 
 ## DATABASE GET REQUEST GET FUNCTIONS ##
@@ -107,7 +109,7 @@ def insert_course_db():
 
     update_course_name(get_db(), "course " + unique_string, new_course_id)
 
-    categories = get_categories_dictionairy(get_db())
+    categories = get_categories_dictionary(get_db())
 
     return render_template("course_display.html", courses=get_courses(get_db()), categories=categories, admin=isAdmin)
 
@@ -128,7 +130,7 @@ def insert_course_ingredient_db():
     i_id = request.args.get("i_id", None)
     if c_id != None and i_id != None:
         insert_course_ingredient(get_db(), c_id, i_id)
-    return render_template("course_display.html", courses=get_courses(get_db()), categories=get_categories_dictionairy(get_db()), admin=isAdmin)
+    return render_template("course_display.html", courses=get_courses(get_db()), categories=get_categories_dictionary(get_db()), admin=isAdmin)
 
 
 ## DATABASE GET REQUEST UPDATE FUNCTIONS ##
@@ -138,7 +140,7 @@ def update_course_name_db():
     c_name = request.args.get("c_name", None)
     if c_id != None and c_name != None:
         update_course_name(get_db(), c_name, c_id)
-    return render_template("course_display.html", courses=get_courses(get_db()), categories=get_categories_dictionairy(get_db()), admin=isAdmin)
+    return render_template("course_display.html", courses=get_courses(get_db()), categories=get_categories_dictionary(get_db()), admin=isAdmin)
 
 
 @app.route("/edit_course_price", methods=["GET"])
@@ -147,7 +149,7 @@ def update_course_price_db():
     price = request.args.get("price", None)
     if c_id != None and price != None:
         update_course_price(get_db(), price, c_id)
-    return render_template("course_display.html", courses=get_courses(get_db()), categories=get_categories_dictionairy(get_db()), admin=isAdmin)
+    return render_template("course_display.html", courses=get_courses(get_db()), categories=get_categories_dictionary(get_db()), admin=isAdmin)
 
 
 @app.route("/edit_course_category", methods=["GET"])
@@ -156,7 +158,7 @@ def update_course_category_db():
     ca_id = request.args.get("ca_id", None)
     if c_id != None and ca_id != None:
         update_course_category(get_db(), ca_id, c_id)
-    return render_template("course_display.html", courses=get_courses(get_db()), categories=get_categories_dictionairy(get_db()), admin=isAdmin)
+    return render_template("course_display.html", courses=get_courses(get_db()), categories=get_categories_dictionary(get_db()), admin=isAdmin)
 
 
 if __name__ == "__main__":

@@ -23,14 +23,14 @@ get_queries = {
     # Get all categories
     "get_categories": "SELECT ca_id, ca_name FROM category",
 
-    # Get all selections
-    "get_selections": "SELECT s_id, s_name, sc_id, i_id",
-
-    # Get all course selections by c_id
-    "get_selections_by_course": "SELECT s.s_id, s_name FROM selection AS s INNER JOIN course_selection AS sc ON s.s_id=sc.s_id WHERE c_id={c_id}",
-
     # Get all selection categories
-    "get_selection_categories": "SELECT sc_id, sc_name FROM selection_category"
+    "get_selection_categories": "SELECT sc_id, sc_name FROM selection_category",
+
+    # Get all selections
+    "get_selections": "SELECT s_id, s_name, sc_id, i_id FROM selection",
+
+    # Get selections by course
+    "get_selections_by_course": "SELECT s.s_id, s_name, s.sc_id, s.i_id FROM selection AS s INNER JOIN course_selection as cs ON s.s_id=cs.s_id WHERE cs.c_id={c_id}"
 }
 
 def get_courses(db):
@@ -46,16 +46,13 @@ def get_courses(db):
                 "ca_id": str(ca_id),
                 "info": str(info),
                 "price": str(price),
-                "ingredients": [],
-                "selections": []
+                "ingredients": []
             })
     finally:
         cur.close()
 
     for c in courses:
         c["ingredients"] = get_ingredients_by_course(db, c["c_id"])
-    for c in courses:
-        c["selections"] = get_selections_by_course(db, c["c_id"])
     return courses
 
 
@@ -94,6 +91,72 @@ def get_allergenes(db):
                 "a_name": str(a_name)
             })
         return allergenes
+    finally:
+        cur.close()
+
+
+def get_categories(db):
+    cur = db.cursor()
+    categories = []
+
+    try:
+        cur.execute(get_queries["get_categories"])
+        for (ca_id, ca_name) in cur:
+            categories.append({
+                "ca_id": str(ca_id),
+                "ca_name": str(ca_name)
+            })
+        return categories
+    finally:
+        cur.close()
+
+
+def get_categories_dictionary(db):
+    cur = db.cursor()
+    categories = {}
+
+    try:
+        cur.execute(get_queries["get_categories"])
+        for (ca_id, ca_name) in cur:
+            categories[str(ca_id)] = {
+                "ca_id": str(ca_id),
+                "ca_name": str(ca_name)
+            }
+        return categories
+    finally:
+        cur.close()
+
+
+def get_selection_categories(db):
+    cur = db.cursor()
+    categories = []
+
+    try:
+        cur.execute(get_queries["get_selection_categories"])
+        for (sc_id, sc_name) in cur:
+            categories.append({
+                "sc_id": str(sc_id),
+                "sc_name": str(sc_name)
+            })
+        return categories
+    finally:
+        cur.close()
+
+
+def get_selections(db):
+    cur = db.cursor()
+    selections = []
+
+    try:
+        cur.execute(get_queries["get_selections"])
+        for (s_id, s_name, sc_id, i_id) in cur:
+            selections.append({
+                "s_id": str(s_id),
+                "s_name": str(s_name),
+                "sc_id": str(sc_id),
+                "i_id": str(i_id)
+            })
+        return selections
     finally:
         cur.close()
 
@@ -146,49 +209,25 @@ def get_allergenes_by_ingredient(db, i_id):
         cur.close()
 
 
-def get_categories(db):
-    cur = db.cursor()
-    categories = []
-
-    try:
-        cur.execute(get_queries["get_categories"])
-        for (ca_id, ca_name) in cur:
-            categories.append({
-                "ca_id": str(ca_id),
-                "ca_name": str(ca_name)
-            })
-
-        return categories
-    finally:
-        cur.close()
-
-
-def get_categories_dictionairy(db):
-    cur = db.cursor()
-    categories = {}
-
-    try:
-        cur.execute(get_queries["get_categories"])
-        for (ca_id, ca_name) in cur:
-            categories[str(ca_id)] = {
-                "ca_id": str(ca_id),
-                "ca_name": str(ca_name)
-            }
-        return categories
-    finally:
-        cur.close()
-
-
-def get_selections(db):
-    # TODO: Implement
-    return []
-
-
 def get_selections_by_course(db, c_id):
-    # TODO: Implement
-    return []
+    cur = db.cursor()
+    selections = []
 
-
-def get_selection_categories(db):
-    # TODO: Implement
-    return []
+    try:
+        if c_id == None:
+            return EMPTY_INPUT_EXCEPTION
+        cur.execute(get_queries["get_selections_by_course"].replace("{c_id}", str(c_id)))
+        for (s_id, s_name, sc_id, i_id) in cur:
+            selections.append({
+                "s_id": str(s_id),
+                "s_name": str(s_name),
+                "sc_id": str(sc_id),
+                "i_id": str(i_id)
+            })
+        return selections
+    except (Error) as err:
+        if 'Unknown column' in str(err):
+            return INVALID_TYPE_EXCEPTION
+        raise err
+    finally:
+        cur.close()
