@@ -7,7 +7,7 @@ import datetime
 app = Flask(__name__)
 app.debug = True
 app.secret_key = "153felgdgorjdr123,fesgsb/?+fef" #if you know a better implementation for creating secure secret keys change this. NB! Random generated are secret keys are not recommended by the interwebs.
-app.config.password = "MySQLNetty6"
+app.config.password = "INSERTPASSWORDHERE"
 app.config.dbinfo = {
     "user": "root",
     "password": app.config.password,
