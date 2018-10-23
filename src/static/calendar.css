@@ -1,0 +1,76 @@
+ul {list-style-type: none;}
+body {
+    font-family: Verdana sans-serif;
+    width: 50%;
+    min-width: 500px;
+    margin: auto;
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+
+.month {
+    position: relative;
+    padding: 70px 0px;
+    width: 100%;
+    background: #1abc9c;
+    text-align: center;
+}
+
+table{
+    border-collapse: collapse;
+}
+
+td{
+    margin: 0px;
+    height: 4em;
+    width: 1em;
+    border: 1px solid black;
+    font-size: 1.2em;
+    vertical-align: text-top;
+    overflow: hidden;
+}
+td a {
+    display: block;
+    margin: -10em;
+    padding: 10em;
+}
+a{
+    text-decoration: none;
+    color: initial;
+}
+
+th{
+    margin: 0px;
+    height: 60px;
+    width: 50px;
+    border: 1px solid black;
+    text-align: left;
+    font-size: 1.2em;
+}
+
+#prev{
+    padding-left: 20px;
+    cursor: pointer;
+    float: left;
+    padding-top: 10px;
+}
+
+#next{
+    padding-right: 20px;
+    cursor: pointer;
+    float: right;
+    padding-top: 10px;
+}
+
+.month ul {
+    margin: 0;
+    padding: 0;
+}
+
+.month ul li {
+    color: white;
+    font-size: 20px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+}
+

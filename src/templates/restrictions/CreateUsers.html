@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Users</title>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+</head>
+<body>
+<h1>Create New User</h1>
+<p>Welcome {{ user }}</p>
+
+
+<!--Once a meny is created in a layout html file delete the line under -->
+ <a href="{{ url_for("index") }}" class="btn btn-primary btn-sm">Main Page</a>
+<div class="row">
+
+{% if success is defined and success == True %}
+    <div class="alert alert-success col-md-5"><p>Successful</p></div>
+{% elif success is defined and success == False  %}
+    <div class="alert alert-danger col-md-5"><p>Failure</p></div>
+{% else %}
+
+{% endif %}
+</div>
+<div class="container">
+
+    <div class="row">
+    <div class="col-md-5">
+        <form action="{{ url_for("CreateUser") }}" name="createUser" method="post">
+
+        <div class="form-group">
+            <label for="username" class="control-label">Username:</label>
+            <input type="text" name="username" id="username" class="form-control" value="{% if username is defined %}{{ username }}{% endif %}"/>
+        </div>
+        <div class="form-group">
+            <label for="passw" class="control-label">Password:</label>
+            <input type="password" name="passw" id="passw" class="form-control" value="{% if passw is defined %}{{ passw }}{% endif %}"/>
+        </div>
+        <div class="form-group">
+            <label class="control-label">Authority Level:
+            <select name="SelectAuthlvl">
+                <option value="1">1</option>
+                <option value="2" selected>2</option>
+            </select>
+            </label>
+        </div>
+            <input type="submit" name="submitcreateUser" class="btn btn-primary" value="Create User"/>
+        </form>
+    </div>
+    </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>index</title>
+</head>
+<body>
+{% if user is defined %}<p>{{ user }}</p>{% endif %}
+
+{% if auth is defined and auth == 1 %}<a href="{{ url_for("GCU") }}">Create Account</a>{% endif %}
+<a href="{{ url_for("timesheet") }}">Timesheet</a>
+<a href="{{ url_for("logoff") }}">Log Off</a>
+</body>
+</html>
