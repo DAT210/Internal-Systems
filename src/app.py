@@ -192,10 +192,6 @@ def workers(work_date):
 
     return render_template("work_date.html", workers=entries, date=work_date)
 
-@app.route("/canceltimesheet",methods=["POST"])
-def canceltimesheet():
-    ""
-
 @app.route("/timesheet/<string:work_date>/<int:employee_id>")
 def form_check(work_date, employee_id):
     timestamp = str(datetime.datetime.now().time())
