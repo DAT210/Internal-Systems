@@ -14,7 +14,7 @@
         </td>
         <!-- Info -->
         <td style="width: 25%">
-            <table class="table table-bordered table-striped">
+            <table>
                 <tbody>
                     <tr>
                         <td style="width: 15%">
@@ -24,12 +24,12 @@
                         </td>
                         <td>
                             {% if admin %}
-                                <span class="hidden-edit-{{ course.c_id }}">
+                                <span class="hidden-edit-course-{{ course.c_id }}">
                                 {% endif %}
                                     {{ course.c_name }}
                                 {% if admin %}
                                 </span>
-                                <span class="hidden-default-{{ course.c_id }}" style="display: none">
+                                <span class="hidden-default-course-{{ course.c_id }}" style="display: none">
                                     <form action="#" class="form-inline">
                                         <input type="text" id="course-edit-name_{{ course.c_id }}" class="form-control course-edit-input_{{ course.c_id }} input-sm" placeholder="Course Name" value="{{ course.c_name }}">
                                         &ensp;
@@ -47,12 +47,12 @@
                         </td>
                         <td>
                             {% if admin %}
-                            <span class="hidden-edit-{{ course.c_id }}">
+                            <span class="hidden-edit-course-{{ course.c_id }}">
                                 {% endif %}
                                 {{ course.price }}
                                 {% if admin %}
                             </span>
-                            <span class="hidden-default-{{ course.c_id }}" style="display: none">
+                            <span class="hidden-default-course-{{ course.c_id }}" style="display: none">
                                 <form action="#" class="form-inline">
                                     <input type="number" id="course-edit-price_{{ course.c_id }}" class="form-control course-edit-input_{{ course.c_id }} input-sm" placeholder="Course Price" value="{{ course.price }}">
                                     &ensp;
@@ -69,10 +69,10 @@
                             </strong>
                         </td>
                         <td>
-                            <span class="hidden-edit-{{ course.c_id }}">
+                            <span class="hidden-edit-course-{{ course.c_id }}">
                                 {{ categories[course.ca_id].ca_name }}
                             </span>
-                            <span class="hidden-default-{{ course.c_id }}" style="display: none">
+                            <span class="hidden-default-course-{{ course.c_id }}" style="display: none">
 
                                 <form action="#" class="form-inline" autocomplete="off">
                                     <div class="autocomplete">
@@ -91,14 +91,14 @@
                             </strong>
                         </td>
                         <td>
-                            <span class="hidden-edit-{{ course.c_id }}">
+                            <span class="hidden-edit-course-{{ course.c_id }}">
                                 {{ course.info }}
                             </span>
-                            <span class="hidden-default-{{ course.c_id }}" style="display: none">
+                            <span class="hidden-default-course-{{ course.c_id }}" style="display: none">
                                 <form action="#" class="form-inline">
                                     <input type="text" id="course-edit-description_{{ course.c_id }}" class="form-control course-edit-description_{{ course.c_id }} input-sm" placeholder="Course Description" value="{{ course.info }}">
                                     &ensp;
-                                    <button class="btn btn-info edit_course_description" name="{{ course.c_id }}">Change</button>
+                                    <input type="button" class="btn btn-info edit_course_description" name="{{ course.c_id }}" value="Change">
                                 </form>
                             </span>
                         </td>
@@ -107,12 +107,12 @@
         </table>
         <!-- Ingredients -->
         <td style="width: 31.25%">
-            <table class="table table-bordered table-striped">
+            <table>
                 {% for ingredient in course.ingredients %}
                 <tr>
                     <td style="width: 16.666%">
                         {% if admin %}
-                            <button class="btn btn-danger btn-sm remove_ingredient_from_course hidden-default-{{ course.c_id }}" style="display: none" name="{{ course.c_id }}_{{ ingredient.i_id }}">X</button>
+                            <button class="btn btn-danger btn-sm remove_ingredient_from_course hidden-default-course-{{ course.c_id }}" style="display: none" name="{{ course.c_id }}_{{ ingredient.i_id }}">X</button>
                         {% endif %}
                         {{ ingredient.i_name }}
                     </td> 
@@ -121,7 +121,7 @@
                 {% endfor %}
             </table>
             {% if admin %}
-                <span class="hidden-default-{{ course.c_id }}" style="display: none">
+                <span class="hidden-default-course-{{ course.c_id }}" style="display: none">
                     <form action="#" class="form-inline" autocomplete="off">
                         <div class="autocomplete">
                             <input type="text" id="autocomplete_ingredient-{{ course.c_id }}" class="form-control ingredient-input" name="ingredient_autocomplete" placeholder="Ingredient">
@@ -133,14 +133,13 @@
             {% endif %}
         </td>
         <!-- Selections -->
-        <!-- TODO: IMPLEMENT -->
         <td style="width: 31.25%">
-            <table class="table table-bordered table-striped">
+            <table>
                 {% for selection in course.selections %}
                 <tr>
                     <td style="width: 16.666%">
                         {% if admin %}
-                            <button class="btn btn-danger btn-sm remove_option_from_course hidden-default-{{ course.c_id }}" style="display: none" name="{{ course.c_id }}_{{ selection.s_id }}">X</button>
+                            <button class="btn btn-danger btn-sm remove_selection_from_course hidden-default-course-{{ course.c_id }}" style="display: none" name="{{ course.c_id }}_{{ selection.s_id }}">X</button>
                         {% endif %}
                         {{ selection.s_name }}
                     </td> 
@@ -148,12 +147,15 @@
                 {% endfor %}
             </table>
             {% if admin %}
-                <form action="#" class="form-inline hidden-default-{{ course.c_id }}" style="display: none" autocomplete="off">
-                    <div class="autocomplete">
-                        <input type="text" id="autocomplete_selection-{{ course.c_id }}" class="form-control selection-input" name="selection_autocomplete" placeholder="Selection">
-                    </div>
-                    <input type="button" id="button_autocomplete_selection-{{ course.c_id }}" style="display:inline" class="btn btn-success add_selection_to_course" name="{{ course.c_id }}" value="Add">
-                </form>
+                <span class="hidden-default-course-{{ course.c_id }}" style="display: none">
+                    <form action="#" class="form-inline" autocomplete="off">
+                        <div class="autocomplete">
+                            <input type="text" id="autocomplete_selection-{{ course.c_id }}" class="form-control selection-input" name="selection_autocomplete" placeholder="Selection">
+                        </div>
+                        &ensp;
+                        <input type="button" id="button_autocomplete_selection-{{ course.c_id }}" style="display:inline" class="btn btn-success add_selection_to_course" name="{{ course.c_id }}" value="Add">
+                    </form>
+                </span>
             {% endif %}
         </td>
     </tr>

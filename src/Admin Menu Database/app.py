@@ -9,6 +9,23 @@ from update_functions import *
 
 # Sindre Hvidsten
 
+##################
+# MISC FUNCTIONS #
+##################
+
+CHARS = list(string.ascii_lowercase)
+
+
+def convert_number_to_unique_char_sequence(number):
+    number -= 1
+    char_sequence = []
+    while number > 0:
+        char_sequence.append(CHARS[number % 26])
+        number //= 26
+    char_sequence.reverse()
+    return ''.join(char_sequence)
+    
+
 app = Flask(__name__)
 
 app.debug = True
@@ -20,7 +37,7 @@ user_info = {
     "username": "root",
     "password": "dat220pass",
     "database": "dat210_menu",
-    "hostname": "localhost"
+    "hostname": "localhost",
 }
 
 app.config["DATABASE_USER"] = user_info["username"]
@@ -60,6 +77,8 @@ def index():
 
 
 ## DATABASE GET REQUEST REMOVE FUNCTIONS ##
+
+## COURSES ##
 @app.route("/remove_course", methods=["GET"])
 def remove_course_db():
     c_id = request.args.get("c_id", None)
@@ -75,6 +94,33 @@ def remove_ingredient_from_course_db():
     if c_id != None and i_id != None:
         remove_course_ingredient(get_db(), c_id, i_id)
     return render_template("course_display.html", courses=get_courses(get_db()), categories=get_categories_dictionary(get_db()), admin=isAdmin)
+
+
+@app.route("/remove_selection_from_course", methods=["GET"])
+def remove_selection_from_course_db():
+    c_id = request.args.get("c_id", None)
+    s_id = request.args.get("s_id", None)
+    if c_id != None and s_id != None:
+        remove_course_selection(get_db(), c_id, s_id)
+    return render_template("course_display.html", courses=get_courses(get_db()), categories=get_categories_dictionary(get_db()), admin=isAdmin)
+
+
+## INGREDIENTS ##
+@app.route("/remove_ingredient", methods=["GET"])
+def remove_ingredient_db():
+    i_id = request.args.get("i_id", None)
+    if i_id != None:
+        remove_ingredient(get_db(), i_id)
+    return render_template("ingredient_display.html", ingredients=get_ingredients(get_db()), admin=isAdmin)
+
+
+## ALLERGENES
+@app.route("/remove_allergene", methods=["GET"])
+def remove_allergene_db():
+    a_id = request.args.get("a_id", None)
+    if a_id != None:
+        remove_allergene(get_db(), a_id)
+    return render_template("allergene_display.html", allergenes=get_allergenes(get_db()), admin=isAdmin)
 
 
 ## DATABASE GET REQUEST GET FUNCTIONS ##
@@ -95,33 +141,32 @@ def get_categories_db():
     categories = get_categories(get_db())
     return json.dumps(categories)
 
-CHARS = list(string.ascii_lowercase)
+
+@app.route("/get_selections", methods=["GET"])
+def get_selections_db():
+    selections = get_selections(get_db())
+    return json.dumps(selections)
+
+
+@app.route("/get_selection_categories", methods=["GET"])
+def get_selection_categories_db():
+    selection_categories = get_selection_categories(get_db())
+    return json.dumps(selection_categories)
+
 
 ## DATABASE GET REQUEST INSERT FUNCTIONS ##
+
+## COURSES ##
 @app.route("/add_course", methods=["GET"])
 def insert_course_db():
     insert_course(get_db(), "", 1, "No description available.", 1.0)
-
     courses = get_courses(get_db())
     new_course_id = courses[len(courses) - 1]["c_id"]
-
     unique_string = convert_number_to_unique_char_sequence(int(new_course_id))
-
     update_course_name(get_db(), "course " + unique_string, new_course_id)
-
     categories = get_categories_dictionary(get_db())
 
     return render_template("course_display.html", courses=get_courses(get_db()), categories=categories, admin=isAdmin)
-
-
-def convert_number_to_unique_char_sequence(number):
-    number -= 1
-    char_sequence = []
-    while number > 0:
-        char_sequence.append(CHARS[number % 26])
-        number //= 26
-    char_sequence.reverse()
-    return ''.join(char_sequence)
 
 
 @app.route("/add_ingredient_to_course", methods=["GET"])
@@ -133,7 +178,60 @@ def insert_course_ingredient_db():
     return render_template("course_display.html", courses=get_courses(get_db()), categories=get_categories_dictionary(get_db()), admin=isAdmin)
 
 
+@app.route("/add_selection_to_course", methods=["GET"])
+def insert_course_selection_db():
+    c_id = request.args.get("c_id", None)
+    s_id = request.args.get("s_id", None)
+    if c_id != None and s_id != None:
+        insert_course_selection(get_db(), c_id, s_id)
+    return render_template("course_display.html", courses=get_courses(get_db()), categories=get_categories_dictionary(get_db()), admin=isAdmin)
+
+
+## INGREDIENT ##
+@app.route("/add_ingredient", methods=["GET"])
+def insert_ingredient_db():
+    insert_ingredient(get_db(), "", 1)
+    ingredients = get_ingredients(get_db())
+    new_ingredient_id = ingredients[len(ingredients) - 1]["i_id"]
+    unique_string = convert_number_to_unique_char_sequence(int(new_ingredient_id))
+    update_ingredient_name(get_db(), "ingredient " + unique_string, new_ingredient_id)
+
+    return render_template("ingredient_display.html", ingredients=get_ingredients(get_db()), admin=isAdmin)
+
+
+## ALLERGENE ##
+@app.route("/add_allergene", methods=["GET"])
+def insert_allergene_db():
+    insert_allergene(get_db(), "")
+    allergenes = get_allergenes(get_db())
+
+    # WEIRD BUG:
+    # For some reason allergene is sorted by name instead of id, need to find a fix for this, somehow
+
+    new_allergene_id = allergenes[len(allergenes) - 1]["a_id"]
+    unique_string = convert_number_to_unique_char_sequence(int(new_allergene_id))
+    update_allergene_name(get_db(), "allergene " + unique_string, new_allergene_id)
+
+    return render_template("allergene_display.html", allergenes=get_allergenes(get_db()), admin=isAdmin)
+
+
+## CATEGORY ##
+
+
+
+## SELECTION ##
+
+
+
+## SELECTION CATEGORY ##
+
+
+
+
+
 ## DATABASE GET REQUEST UPDATE FUNCTIONS ##
+
+## EDIT COURSES ##
 @app.route("/edit_course_name", methods=["GET"])
 def update_course_name_db():
     c_id = request.args.get("c_id", None)
@@ -160,6 +258,34 @@ def update_course_category_db():
         update_course_category(get_db(), ca_id, c_id)
     return render_template("course_display.html", courses=get_courses(get_db()), categories=get_categories_dictionary(get_db()), admin=isAdmin)
 
+
+@app.route("/edit_course_description", methods=["GET"])
+def update_course_description_db():
+    c_id = request.args.get("c_id", None)
+    description = request.args.get("description", None)
+    if c_id != None and description != None:
+        update_course_info(get_db(), description, c_id)
+    return render_template("course_display.html", courses=get_courses(get_db()), categories=get_categories_dictionary(get_db()), admin=isAdmin)
+
+
+## EDIT INGREDIENTS ##
+@app.route("/edit_ingredient_name", methods=["GET"])
+def update_ingredient_name_db():
+    i_id = request.args.get("i_id", None)
+    i_name = request.args.get("i_name", None)
+    if i_id != None and i_name != None:
+        update_ingredient_name(get_db(), i_name, i_id)
+    return render_template("ingredient_display.html", ingredients=get_ingredients(get_db()), admin=isAdmin)
+
+
+## EDIT ALLERGENES ##
+@app.route("/edit_allergene_name", methods=["GET"])
+def update_allergene_name_db():
+    a_id = request.args.get("a_id", None)
+    a_name = request.args.get("a_name", None)
+    if a_id != None and a_name != None:
+        update_allergene_name(get_db(), a_name, a_id)
+    return render_template("allergene_display.html", allergenes=get_allergenes(get_db()), admin=isAdmin)
 
 if __name__ == "__main__":
     app.run()
