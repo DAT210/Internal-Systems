@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+
+            <form class="form-group" action="/login" method="POST">
+                <h3 class="text-center">Sign In:</h3>
+                <label class="control-label" for="username">Username:</label><br />
+                <input type="text" name="username" id="username" class="form-control" placeholder="Username" value="{% if username is defined %}{{ username }}{% endif %}"/>
+                <label class="contorl-label" for="password">Password:</label>
+                <input type="password" name="password" id="password" class="form-control" placeholder="Password" value="{% if password is defined %}{{ password }}{% endif %}"/>
+                <input type="submit" class="btn btn-primary btn-block" value="Sign in">
+            </form>
+            {%  if failure is defined and failure == True %}
+                <div class="alert bg-danger">
+                <p>Authentication failed. Please try again.</p>
+                </div>
+            {%  endif  %}
+            {% if logoff %}
+                <div class="sucess bg-success">
+                <p>{{ logoff }}</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+</body>
+</html>

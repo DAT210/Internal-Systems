@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Work-Date</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="..\static\shift_plan.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+</head>
+<body style="margin: auto; margin-top: 20px;">
+     <a href="{{ url_for("timesheet") }}" class="btn btn-primary">TimeSheet</a>
+    <div id="head"> 
+        <ul>
+          <li>{{ date }}</li>
+        </ul>
+      </div>
+    <table style="margin-top: 20px;" class="table table-striped">
+        <thead>
+            <tr>
+                <th>Employee</th>
+                <th>In</th>
+                <th>Shift</th>
+                <th>Checked In</th>
+                <th>Checked Out</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in workers|sort(attribute='work_start') %}
+                <tr>
+                    <td>{{ entry.employee_id }}</td>
+                    <td>{% if not entry.clock_out %}<a href="/timesheet/{{ date }}/{{ entry.employee_id }}">{% endif %}
+                        {% if entry.clock_in and not entry.clock_out %} Yes 
+                        {% else %} No {% endif %}{% if not entry.clock_out %}</a>{% endif %}</td>
+                    <td>{{ entry.work_start }} --> {{ entry.work_finish }}</td>
+                    <td>{{ entry.clock_in or '--:--:--' }}</td>
+                    <td>{{ entry.clock_out or '--:--:--' }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

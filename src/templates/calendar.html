@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Calendar</title>
+    <link rel="stylesheet" href="..\static\calendar.css">
+
+    <script>
+        var Calendar;
+
+        function setCalendar(){
+            Calendar = new Date();
+        }
+        function checkIfLeapYear(year){
+            return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
+        }
+
+        function render_calendar(month){
+            var li_header_content = '<br><span id="current_year" style="font-size:18px"></span>';
+
+            var month_of_year = new Array('January','February','March','April','May','June','July','August','September','October','November','December');
+            var days_of_each_month = new Array(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
+
+            var year = Calendar.getFullYear();     
+
+            if(month < 0){
+                month = 11;
+                year--;
+                Calendar.setFullYear(year);
+            }
+            if(month > 11){
+                month = 0;
+                year++;
+                Calendar.setFullYear(year);
+            }
+
+            Calendar.setDate(1);    
+            Calendar.setMonth(month);    
+
+            var table_body = document.getElementById("body");
+            
+            document.getElementById("current_month").innerHTML = month_of_year[month] + li_header_content; //need to add html content every time
+            document.getElementById("current_year").textContent = year;
+            
+            var dummy_date = new Date(year, month, 1);
+
+            while (table_body.firstChild) {
+                table_body.removeChild(table_body.firstChild);
+            }
+
+            for (i = 1; i <= days_of_each_month[Calendar.getMonth()]; i++){
+                if(i == 1){
+                    var table_row = document.createElement("tr");
+                }
+                var list_entry = document.createElement("li");
+                var table_entry = document.createElement("td");
+                var table_entry_link = document.createElement("a");
+
+                table_entry_link.href = "/timesheet/" + i.toString() + "-" + (Calendar.getMonth() + 1).toString() + "-" + Calendar.getFullYear().toString();
+
+                if(i == 1){
+                    var start_weekday_of_month = dummy_date.getDay();
+                    for (j = 1; j < start_weekday_of_month; j++){
+                        var empty_table_entry = document.createElement("td");
+                        empty_table_entry.appendChild(document.createTextNode(""));
+                        table_row.appendChild(empty_table_entry);
+                    }
+                }
+
+                table_entry_link.appendChild(document.createTextNode(i));
+                table_entry.appendChild(table_entry_link);
+                table_row.appendChild(table_entry);
+
+                if(checkIfLeapYear(Calendar.getFullYear()) && Calendar.getMonth()==1 && i==days_of_each_month[Calendar.getMonth()]){
+                    var extra_table_entry = document.createElement("td");
+                    extra_table_entry.appendChild(document.createTextNode(i+1));
+                    if(table_row.childElementCount == 7){
+                        table_body.appendChild(table_row);
+                        table_row = document.createElement("tr");
+                    }
+                    table_row.appendChild(extra_table_entry);
+                }
+
+                if(table_row.childElementCount == 7 || i==days_of_each_month[Calendar.getMonth()]){
+                    table_body.appendChild(table_row);
+                    table_row = document.createElement("tr");
+                }
+            }
+        }
+
+        window.onload = function(){ 
+            setCalendar();
+            console.log(Calendar.getMonth());
+            document.getElementById("prev").onclick = function(){
+                render_calendar(Calendar.getMonth() - 1); 
+            }
+            document.getElementById("next").onclick = function(){
+                render_calendar(Calendar.getMonth() + 1);
+            }
+            render_calendar(Calendar.getMonth());
+        }
+    </script>
+</head>
+<body>
+    <a href="{{ url_for("index") }}" class="btn btn-primary">Main Page</a>
+    <div class="month"> 
+        <ul>
+          <li class="prev" id="prev">&#10094;</li>
+          <li class="next" id="next">&#10095;</li>
+          <li id="current_month"><br><span id="current_year" style="font-size:18px"></span></li>
+        </ul>
+      </div>
+
+      <table style="width: 100%;">
+          <thead>
+              <th>Mon</th>
+              <th>Tue</th>
+              <th>Wed</th>
+              <th>Thu</th>
+              <th>Fri</th>
+              <th>Sat</th>
+              <th>Sun</th>
+          </thead>
+          <tbody id="body">
+
+          </tbody>
+      </table>
+
+</body>
+</html>
