@@ -46,13 +46,16 @@ def get_courses(db):
                 "ca_id": str(ca_id),
                 "info": str(info),
                 "price": str(price),
-                "ingredients": []
+                "ingredients": [],
+                "selections": []
             })
     finally:
         cur.close()
 
     for c in courses:
         c["ingredients"] = get_ingredients_by_course(db, c["c_id"])
+    for c in courses:
+        c["selections"] = get_selections_by_course(db, c["c_id"])
     return courses
 
 
