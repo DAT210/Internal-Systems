@@ -21,6 +21,14 @@ var inEdit = {
 
 var darkMode = false;
 
+var UpdateSuccessFlags = {
+    ingredient: true,
+    allergene: true,
+    category: true,
+    selection: true,
+    selectionCategory: true
+};
+
 $(document).ready(function() {
     init();
 
@@ -232,6 +240,9 @@ $(document).ready(function() {
     function addIngredient() {
         $.get("/add_ingredient", function (data) {
             $(".ingredient_display").html(data);
+            UpdateSuccessFlags["ingredient"] = false;
+            updateIngredients();
+            setTimeOut(waitForUpdate("ingredient", initCourses), 50);
             initIngredients();
             // TODO: Update ingredients list, somehow
         });
@@ -460,6 +471,7 @@ $(document).ready(function() {
             async: false,
             success: function(data) {
                 ingredients = JSON.parse(data);
+                UpdateSuccessFlags["ingredient"] = true;
             }
         });
     }
@@ -471,6 +483,7 @@ $(document).ready(function() {
             async: false,
             success: function(data) {
                 allergenes = JSON.parse(data);
+                UpdateSuccessFlags["allergene"] = true;
             }
         });
     }
@@ -482,6 +495,7 @@ $(document).ready(function() {
             async: false,
             success: function(data) {
                 categories = JSON.parse(data);
+                UpdateSuccessFlags["category"] = true;
             }
         });
     }
@@ -493,6 +507,7 @@ $(document).ready(function() {
             async: false,
             success: function(data) {
                 selections = JSON.parse(data);
+                UpdateSuccessFlags["selection"] = true;
             }
         });
     }
@@ -504,6 +519,7 @@ $(document).ready(function() {
             async: false,
             success: function(data) {
                 selectionCategories = JSON.parse(data);
+                UpdateSuccessFlags["selectionCategory"] = true;
             }
         });
     }
@@ -632,5 +648,14 @@ function autocomplete(inp, arr) {
     document.addEventListener("click", function(e) {
         closeAllLists(e.target);
     });
-    // END OF W3 SCHOOLS AUTOCOMPLETE
+    
+}
+// END OF W3 SCHOOLS AUTOCOMPLETE
+
+function waitForUpdate(flag, successFunction) {
+    if (!UpdateSuccessFlags[flag]) {
+        setTimeout(waitForUpdate(flag, successFunction), 50);
+    } else {
+        setTimeout(successFunction, 50);
+    }
 }

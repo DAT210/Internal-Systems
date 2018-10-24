@@ -160,8 +160,8 @@ def get_selection_categories_db():
 @app.route("/add_course", methods=["GET"])
 def insert_course_db():
     insert_course(get_db(), "", 1, "No description available.", 1.0)
-    courses = get_courses(get_db())
-    new_course_id = courses[len(courses) - 1]["c_id"]
+
+    new_course_id = get_course_end(get_db())[0]["c_id"]
     unique_string = convert_number_to_unique_char_sequence(int(new_course_id))
     update_course_name(get_db(), "course " + unique_string, new_course_id)
     categories = get_categories_dictionary(get_db())
@@ -191,8 +191,8 @@ def insert_course_selection_db():
 @app.route("/add_ingredient", methods=["GET"])
 def insert_ingredient_db():
     insert_ingredient(get_db(), "", 1)
-    ingredients = get_ingredients(get_db())
-    new_ingredient_id = ingredients[len(ingredients) - 1]["i_id"]
+
+    new_ingredient_id = get_ingredient_end(get_db())[0]["i_id"]
     unique_string = convert_number_to_unique_char_sequence(int(new_ingredient_id))
     update_ingredient_name(get_db(), "ingredient " + unique_string, new_ingredient_id)
 
@@ -203,12 +203,11 @@ def insert_ingredient_db():
 @app.route("/add_allergene", methods=["GET"])
 def insert_allergene_db():
     insert_allergene(get_db(), "")
-    allergenes = get_allergenes(get_db())
 
     # WEIRD BUG:
     # For some reason allergene is sorted by name instead of id, need to find a fix for this, somehow
 
-    new_allergene_id = allergenes[len(allergenes) - 1]["a_id"]
+    new_allergene_id = get_allergene_end(get_db())[0]["a_id"]
     unique_string = convert_number_to_unique_char_sequence(int(new_allergene_id))
     update_allergene_name(get_db(), "allergene " + unique_string, new_allergene_id)
 
@@ -216,17 +215,39 @@ def insert_allergene_db():
 
 
 ## CATEGORY ##
+@app.route("/add_category", methods=["GET"])
+def insert_category_db():
+    insert_category(get_db(), "")
 
+    new_category_id = get_category_end(get_db())[0]["c_id"]
+    unique_string = convert_number_to_unique_char_sequence(int(new_category_id))
+    update_category_name(get_db(), "category " + unique_string, new_category_id)
+
+    return render_template("category_display.html", categories=get_categories_dictionary(get_db()), admin=isAdmin)
 
 
 ## SELECTION ##
+@app.route("/add_selection", methods=["GET"])
+def insert_selection_db():
+    insert_selection(get_db(), "", 1, "NULL")
 
+    new_selection_id = get_selection_end(get_db())[0]["s_id"]
+    unique_string = convert_number_to_unique_char_sequence(int(new_selection_id))
+    update_selection_name(get_db(), "selection " + unique_string, new_selection_id)
+
+    return render_template("selection_display.html", selections=get_selections(get_db()), admin=isAdmin)
 
 
 ## SELECTION CATEGORY ##
+@app.route("/add_selection_category", methods=["GET"])
+def insert_selection_category_db():
+    insert_selection_category(get_db(), "")
 
+    new_selection_category_id = get_selection_category_end(get_db())[0]["sc_id"]
+    unique_string = convert_number_to_unique_char_sequence(int(new_selection_category_id))
+    update_selection_category_name(get_db(), "selection category " + unique_string, new_selection_category_id)
 
-
+    return render_template("selection_category_display.html", selection_categories=get_selection_categories(get_db()), admin=isAdmin)
 
 
 ## DATABASE GET REQUEST UPDATE FUNCTIONS ##
@@ -286,6 +307,7 @@ def update_allergene_name_db():
     if a_id != None and a_name != None:
         update_allergene_name(get_db(), a_name, a_id)
     return render_template("allergene_display.html", allergenes=get_allergenes(get_db()), admin=isAdmin)
+
 
 if __name__ == "__main__":
     app.run()
