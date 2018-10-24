@@ -27,10 +27,10 @@
                 </span>
             {% endif %}
         </td>
-        <td class="{% if ingredient.available == "1" %}bg-success{% else %}bg-danger{% endif %}" style="width: 31.25%">
+        <td class="{% if ingredient.available == "1" %}bg-success{% else %}bg-danger{% endif %}" style="width: 5%">
         </td>
-        <td style="width: 31.25%">
-            <table class="table table-bordered table-striped">
+        <td style="width: 16.125%">
+            <table>
                 {% for allergene in ingredient.allergenes %}
                 <tr>
                     <td style="width: 16.666%">
@@ -43,6 +43,7 @@
                 {% endfor %}
             </table>
             {% if admin %}
+                <br>
                 <span class="hidden-default-ingredient-{{ ingredient.i_id }}" style="display: none">
                     <form action="#" class="form-inline" autocomplete="off">
                         <div class="autocomplete">
@@ -53,6 +54,11 @@
                     </form>
                 </span>
             {% endif %}
+        </td>
+        <td style="width: 16.125%">
+            <table>
+
+            </table>
         </td>
     </tr>
 {% endfor %}

@@ -55,13 +55,16 @@
             <th>
                 Allergenes
             </th>
+            <th>
+                Selection Links
+            </th>
         </thead>
         <tbody class="ingredient_display">
             {% include "ingredient_display.html" %}
         </tbody>
         {% if admin %}
         <tr>
-            <td colspan="4">
+            <td colspan="5">
                 <div class="row justify-content-center">
                     <input class="btn btn-success btn-lg col-4" id="add_ingredient" value="Add New Ingredient">
                 </div>
