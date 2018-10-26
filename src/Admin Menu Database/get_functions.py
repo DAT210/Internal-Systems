@@ -41,7 +41,7 @@ get_queries = {
     # Get last selection category by id
     "get_selection_category_end": "SELECT sc_id, sc_name FROM selection_category ORDER BY sc_id DESC LIMIT 1",
 
-    # Get all selections
+    # Get all selections sorted by s_id ascending
     "get_selections": "SELECT s_id, s_name, sc_id, i_id FROM selection ORDER BY s_id ASC",
 
     # Get last selection by id
@@ -122,6 +122,29 @@ def get_ingredients(db):
         cur.close()
 
     for i in ingredients:
+        i["allergenes"] = get_allergenes_by_ingredient(db, i["i_id"])
+    return ingredients
+
+
+def get_ingredients_dictionary(db):
+    cur = db.cursor()
+    ingredients = {}
+
+    try:
+        cur.execute(get_queries["get_ingredients"])
+        for (i_id, i_name, available) in cur:
+            ingredients[str(i_id)] = {
+                "i_id": str(i_id),
+                "i_name": str(i_name),
+                "available": str(available),
+                "allergenes": []
+            }
+    except mysql.connector.Error as err:
+        return render_template("error.html", msg=err)
+    finally:
+        cur.close()
+
+    for _, i in ingredients.items():
         i["allergenes"] = get_allergenes_by_ingredient(db, i["i_id"])
     return ingredients
 
