@@ -6,7 +6,7 @@ from mysql.connector import IntegrityError, DataError, Error
 
 get_queries = {
     # Get all courses
-    "get_courses": "SELECT c_id, c_name, ca_id, info, price FROM course",
+    "get_courses": "SELECT c_id, c_name, ca_id, info, price FROM course ORDER BY c_id ASC",
 
     # Get last course by id
     "get_course_end": "SELECT c_id, c_name, ca_id, info, price FROM course ORDER BY c_id DESC LIMIT 1",
@@ -15,7 +15,7 @@ get_queries = {
     "get_ingredients_by_course": "SELECT i.i_id, i_name, available FROM ingredient AS i INNER JOIN course_ingredient AS ci ON i.i_id=ci.i_id WHERE c_id={c_id}",
 
     # Get all ingredients
-    "get_ingredients": "SELECT i_id, i_name, available FROM ingredient",
+    "get_ingredients": "SELECT i_id, i_name, available FROM ingredient ORDER BY i_id ASC",
 
     # Get last ingredient by id
     "get_ingredient_end": "SELECT i_id, i_name, available FROM ingredient ORDER BY i_id DESC LIMIT 1",
@@ -24,25 +24,25 @@ get_queries = {
     "get_allergenes_by_ingredient": "SELECT a.a_id, a.a_name FROM allergene AS a INNER JOIN ingredient_allergene AS ia ON a.a_id=ia.a_id WHERE ia.i_id={i_id}",
 
     # Get all allergenes
-    "get_allergenes": "SELECT a_id, a_name FROM allergene",
+    "get_allergenes": "SELECT a_id, a_name FROM allergene ORDER BY a_id ASC",
 
     # Get last allergene by id
     "get_allergene_end": "SELECT a_id, a_name FROM allergene ORDER BY a_id DESC LIMIT 1",
 
     # Get all categories
-    "get_categories": "SELECT ca_id, ca_name FROM category",
+    "get_categories": "SELECT ca_id, ca_name FROM category ORDER BY ca_id ASC",
 
     # Get last category by id
     "get_category_end": "SELECT ca_id, ca_name FROM category ORDER BY ca_id DESC LIMIT 1",
 
     # Get all selection categories
-    "get_selection_categories": "SELECT sc_id, sc_name FROM selection_category",
+    "get_selection_categories": "SELECT sc_id, sc_name FROM selection_category ORDER BY sc_id ASC",
 
     # Get last selection category by id
     "get_selection_category_end": "SELECT sc_id, sc_name FROM selection_category ORDER BY sc_id DESC LIMIT 1",
 
     # Get all selections
-    "get_selections": "SELECT s_id, s_name, sc_id, i_id FROM selection",
+    "get_selections": "SELECT s_id, s_name, sc_id, i_id FROM selection ORDER BY s_id ASC",
 
     # Get last selection by id
     "get_selection_end": "SELECT s_id, s_name, sc_id, i_id FROM selection ORDER BY sc_id DESC LIMIT 1",
@@ -240,6 +240,22 @@ def get_selection_categories(db):
                 "sc_id": str(sc_id),
                 "sc_name": str(sc_name)
             })
+        return selection_categories
+    finally:
+        cur.close()
+
+
+def get_selection_categories_dictionary(db):
+    cur = db.cursor()
+    selection_categories = {}
+
+    try:
+        cur.execute(get_queries["get_selection_categories"])
+        for (sc_id, sc_name) in cur:
+            selection_categories[str(sc_id)] = {
+                "sc_id": str(sc_id),
+                "sc_name": str(sc_name)
+            }
         return selection_categories
     finally:
         cur.close()

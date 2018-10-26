@@ -1,5 +1,6 @@
 {% for allergene in allergenes %}
     <tr>
+        <!-- ID -->
         <td style="width: 12.5%">
             <h5 style="display: inline-block">
                 {{ allergene.a_id }}
@@ -11,6 +12,7 @@
                 <button class="btn btn-danger remove_allergene" name="{{ allergene.a_name }}_{{ allergene.a_id }}">Remove</button>
             {% endif %}
         </td>
+        <!-- Name -->
         <td style="width: 87.5%">
             {% if admin %}
                 <span class="hidden-edit-allergene-{{ allergene.a_id }}">
