@@ -60,6 +60,8 @@
                                 </form>
                             </span>
                         </td>
+                    </tr>
+                    <tr>
                         <td>
                             <strong style="width: 15%">
                                 Ingredient:
@@ -67,16 +69,20 @@
                         </td>
                         <td>
                             <span class="hidden-edit-selection-{{ selection.s_id }}">
-                                {{ selection_categories[selection.sc_id].sc_name }}
+                                {% if not selection.i_id == "None" %}
+                                    {{ ingredients[selection.i_id].i_name }}
+                                {% else %}
+                                    Not linked
+                                {% endif %}
                             </span>
                             <span class="hidden-default-selection-{{ selection.s_id }}" style="display: none">
                                 
                                 <form action="#" class="form-inline" autocomplete="off">
                                     <div class="autocomplete">
-                                        <input type="text" id="autocomplete_selection_edit_selection_category-{{ selection.s_id }}" class="form-control selection-edit-selection-category-input" name="selection_edit_selection_category_autocomplete" placeholder="Selection Category" value="{{ selection_categories[selection.sc_id].sc_name }}">
+                                        <input type="text" id="autocomplete_selection_edit_ingredient-{{ selection.s_id }}" class="form-control selection-edit-ingredient-input" name="selection_edit_ingredient_autocomplete" placeholder="Ingredient" value="{% if not selection.i_id == "None" %}{{ ingredients[selection.i_id].i_name }}{% endif %}">
                                     </div>
                                     &ensp;
-                                    <input type="button" id="button_autocomplete_selection_edit_selection_category-{{ selection.s_id }}" style="display:inline" class="btn btn-info edit_selection_selection_category" name="{{ selection.s_id }}" value="Change">
+                                    <input type="button" id="button_autocomplete_selection_edit_ingredient-{{ selection.s_id }}" style="display:inline" class="btn btn-info edit_selection_ingredient" name="{{ selection.s_id }}" value="Change">
                                 </form>
                             </span>
                         </td>

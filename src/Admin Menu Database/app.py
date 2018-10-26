@@ -68,7 +68,7 @@ def teardown_db(error):
 @app.route("/")
 def index():
     courses = get_courses(get_db())
-    ingredients = get_ingredients(get_db())
+    ingredients = get_ingredients_dictionary(get_db())
     allergenes = get_allergenes(get_db())
     categories = get_categories_dictionary(get_db())
     selections = get_selections(get_db())
@@ -84,7 +84,7 @@ def get_course_display():
 
 @app.route("/get_ingredient_display", methods=["GET"])
 def get_ingredient_display():
-    return render_template("ingredient_display.html", ingredients=get_ingredients(get_db()), admin=isAdmin)
+    return render_template("ingredient_display.html", ingredients=get_ingredients_dictionary(get_db()), admin=isAdmin)
 
 
 @app.route("/get_allergene_display", methods=["GET"])
@@ -104,7 +104,7 @@ def get_selection_display():
 
 @app.route("/get_selection_category_display", methods=["GET"])
 def get_selection_category_display():
-    return render_template("selection_category_display.html", selection_categories=get_selection_categories_dictionary(get_db()), admin=isAdmin)
+    return render_template("selection_category_display.html", selection_categories=get_selection_categories_dictionary(get_db()), ingredients=get_ingredients_dictionary(get_db()), admin=isAdmin)
 
 
 ## DATABASE GET REQUEST REMOVE FUNCTIONS ##
@@ -354,6 +354,58 @@ def update_allergene_name_db():
     a_name = request.args.get("a_name", None)
     if a_id != None and a_name != None:
         update_allergene_name(get_db(), a_name, a_id)
+    return ""
+
+
+## EDIT CATEGORIES ##
+@app.route("/edit_category_name", methods=["GET"])
+def update_category_name_db():
+    ca_id = request.args.get("ca_id", None)
+    ca_name = request.args.get("ca_name", None)
+    if ca_id != None and ca_name != None:
+        update_category_name(get_db(), ca_name, ca_id)
+    return ""
+
+
+## EDIT SELECTIONS ##
+@app.route("/edit_selection_name", methods=["GET"])
+def update_selection_name_db():
+    s_id = request.args.get("s_id", None)
+    s_name = request.args.get("s_name", None)
+    if s_id != None and s_name != None:
+        update_selection_name(get_db(), s_name, s_id)
+    return ""
+
+
+@app.route("/edit_selection_selection_category", methods=["GET"])
+def update_selection_selection_category_db():
+    s_id = request.args.get("s_id", None)
+    sc_id = request.args.get("sc_id", None)
+    if s_id != None and sc_id != None:
+        update_selection_selection_category(get_db(), sc_id, s_id)
+    return ""
+
+
+@app.route("/edit_selection_ingredient", methods=["GET"])
+def update_selection_ingredient_db():
+    s_id = request.args.get("s_id", None)
+    i_id = request.args.get("i_id", None)
+
+    if int(i_id) == -1:
+        i_id = "NULL"
+        
+    if s_id != None and i_id != None:
+        update_selection_ingredient(get_db(), i_id, s_id)
+    return ""
+
+
+## EDIT SELECTION CATEGORIES ##
+@app.route("/edit_selection_category_name", methods=["GET"])
+def update_selection_category_name_db():
+    sc_id = request.args.get("sc_id", None)
+    sc_name = request.args.get("sc_name", None)
+    if sc_id != None and sc_name != None:
+        update_selection_category_name(get_db(), sc_name, sc_id)
     return ""
 
 

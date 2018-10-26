@@ -497,7 +497,7 @@ $(document).ready(function() {
 
     function editSelectionSelectionCategory() {
         var s_id = $(this).prop("id").split("-")[1];
-        var sc_id = $("#autocomplete_selection_edit_selection-category-" + s_id).prop("name");
+        var sc_id = $("#autocomplete_selection_edit_selection_category-" + s_id).prop("name");
         $.get("/edit_selection_selection_category", {s_id: s_id, sc_id: sc_id}, function () {
             updateSelectionDisplay();
         });
@@ -505,7 +505,12 @@ $(document).ready(function() {
 
     function editSelectionIngredient() {
         var s_id = $(this).prop("id").split("-")[1];
-        var i_id = $("#autocomplete_selection_edit_ingredient-" + s_id).prop("name");
+        var i_id = parseInt($("#autocomplete_selection_edit_ingredient-" + s_id).prop("name"));
+
+        if (isNaN(i_id)) {
+            i_id = -1;
+        }
+
         $.get("/edit_selection_ingredient", {s_id: s_id, i_id: i_id}, function () {
             updateSelectionDisplay();
         });
