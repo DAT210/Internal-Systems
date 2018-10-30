@@ -99,7 +99,7 @@ def get_category_display():
 
 @app.route("/get_selection_display", methods=["GET"])
 def get_selection_display():
-    return render_template("selection_display.html", selections=get_selections(get_db()), selection_categories=get_selection_categories_dictionary(get_db()), admin=isAdmin)
+    return render_template("selection_display.html", selections=get_selections(get_db()), selection_categories=get_selection_categories_dictionary(get_db()), ingredients=get_ingredients_dictionary(get_db()), admin=isAdmin)
 
 
 @app.route("/get_selection_category_display", methods=["GET"])
@@ -392,10 +392,11 @@ def update_selection_ingredient_db():
     i_id = request.args.get("i_id", None)
 
     if int(i_id) == -1:
-        i_id = "NULL"
-        
-    if s_id != None and i_id != None:
-        update_selection_ingredient(get_db(), i_id, s_id)
+        if s_id != None:
+            update_selection_ingredient(get_db(), "NULL", s_id)
+    else:
+        if s_id != None and i_id != None:
+            update_selection_ingredient(get_db(), i_id, s_id)
     return ""
 
 
