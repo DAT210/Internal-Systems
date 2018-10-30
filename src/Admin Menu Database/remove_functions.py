@@ -7,6 +7,7 @@ remove_queries = {
     # Delete a course by c_id
     "remove_course": ["DELETE FROM course_ingredient WHERE c_id = {c_id}", "DELETE FROM course_selection WHERE c_id = {c_id}", "DELETE FROM course WHERE c_id = {c_id}"],
 
+    # THIS FUNCTION NEEDS TO WORK PROPERLY
     # Delete an ingredient by i_id
     "remove_ingredient": ["DELETE FROM course_selection JOIN ON s_id selection WHERE i_id = {i_id}", "DELETE FROM selection WHERE i_id = {i_id}", "DELETE FROM ingredient_allergene WHERE i_id = {i_id}", "DELETE FROM course_ingredient WHERE i_id = {i_id}", "DELETE FROM ingredient WHERE i_id = {i_id}"],
 
@@ -21,6 +22,14 @@ remove_queries = {
 
     # Delete an allergene for an ingredient by i_id and a_id
     "remove_ingredient_allergene": ["DELETE FROM ingredient_allergene WHERE i_id = {i_id} AND a_id = {a_id}"]
+
+    # Missing: 
+        # Delete category by c_id
+        # Delete selection by s_id
+        # Delete selection_category by sc_id
+
+    # Fixing:
+        # Fix delete ingredient by i_id
 }
 
 
