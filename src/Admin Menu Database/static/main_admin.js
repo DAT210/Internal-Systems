@@ -448,7 +448,7 @@ $(document).ready(function() {
                 updateIngredients()
             ).done(function () {
                 updateCourseDisplay();
-                updateCategoryDisplay();
+                updateSelectionDisplay();
             });
         });
     }
@@ -469,9 +469,9 @@ $(document).ready(function() {
 
         // EDIT CATEGORIES
     function editCategoryName() {
-        var c_id = $(this).prop("name");
-        var c_name = $("#category-edit-name_" + c_id).val();
-        $.get("/edit_category_name", {c_id: c_id, c_name: c_name}, function () {
+        var ca_id = $(this).prop("name");
+        var ca_name = $("#category-edit-name_" + ca_id).val();
+        $.get("/edit_category_name", {ca_id: ca_id, ca_name: ca_name}, function () {
             updateCategoryDisplay();
             $.when(
                 updateCategories()

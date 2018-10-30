@@ -12,7 +12,7 @@ update_queries = {
     "update_course_name": "UPDATE course SET c_name='{c_name}' WHERE c_id={c_id}",
 
     # Update course category by id
-    "update_course_category": "UPDATE course SET ca_id='{ca_id}' WHERE c_id={c_id}",
+    "update_course_category": "UPDATE course SET ca_id={ca_id} WHERE c_id={c_id}",
 
     # Update course info by id
     "update_course_info": "UPDATE course SET info='{info}' WHERE c_id={c_id}",
@@ -44,10 +44,10 @@ update_queries = {
     "update_selection_name": "UPDATE selection SET s_name='{s_name}' WHERE s_id={s_id}",
 
     # Update selection category by id
-    "update_selection_selection_category": "UPDATE selection SET sc_id='{sc_id}' WHERE s_id={s_id}",
+    "update_selection_selection_category": "UPDATE selection SET sc_id={sc_id} WHERE s_id={s_id}",
 
     # Update selection ingredient by id
-    "update_selection_ingredient": "UPDATE selection SET i_id='{i_id}' WHERE s_id={s_id}"
+    "update_selection_ingredient": "UPDATE selection SET i_id={i_id} WHERE s_id={s_id}"
 }
 
 def update_course_name(db, c_name, c_id):
@@ -259,6 +259,7 @@ def update_selection_ingredient(db, i_id, s_id):
         if cur.rowcount == 0:
             return NO_UPDATE_EXCEPTION
     except (Error) as err:
+        print(str(err))
         if 'Incorrect integer value:' in str(err):
             return INVALID_TYPE_EXCEPTION
         if 'Cannot add or update a child row: a foreign key constraint fails' in str(err):
