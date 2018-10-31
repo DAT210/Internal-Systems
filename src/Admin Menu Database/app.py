@@ -68,23 +68,23 @@ def teardown_db(error):
 @app.route("/")
 def index():
     courses = get_courses(get_db())
-    ingredients = get_ingredients_dictionary(get_db())
+    ingredients = get_ingredients(get_db(), True)
     allergenes = get_allergenes(get_db())
-    categories = get_categories_dictionary(get_db())
+    categories = get_categories(get_db(), True)
     selections = get_selections(get_db())
-    selection_categories = get_selection_categories_dictionary(get_db())
+    selection_categories = get_selection_categories(get_db(), True)
     return render_template("index.html", courses=courses, ingredients=ingredients, allergenes=allergenes, categories=categories, selections=selections, selection_categories=selection_categories, admin=isAdmin)
 
 
 ## GET THE DISPLAYS ##
 @app.route("/get_course_display", methods=["GET"])
 def get_course_display():
-    return render_template("course_display.html", courses=get_courses(get_db()), categories=get_categories_dictionary(get_db()), admin=isAdmin)
+    return render_template("course_display.html", courses=get_courses(get_db()), categories=get_categories(get_db(), True), admin=isAdmin)
 
 
 @app.route("/get_ingredient_display", methods=["GET"])
 def get_ingredient_display():
-    return render_template("ingredient_display.html", ingredients=get_ingredients_dictionary(get_db()), admin=isAdmin)
+    return render_template("ingredient_display.html", ingredients=get_ingredients(get_db(), True), admin=isAdmin)
 
 
 @app.route("/get_allergene_display", methods=["GET"])
@@ -94,17 +94,17 @@ def get_allergene_display():
 
 @app.route("/get_category_display", methods=["GET"])
 def get_category_display():
-    return render_template("category_display.html", categories=get_categories_dictionary(get_db()), admin=isAdmin)
+    return render_template("category_display.html", categories=get_categories(get_db(), True), admin=isAdmin)
 
 
 @app.route("/get_selection_display", methods=["GET"])
 def get_selection_display():
-    return render_template("selection_display.html", selections=get_selections(get_db()), selection_categories=get_selection_categories_dictionary(get_db()), ingredients=get_ingredients_dictionary(get_db()), admin=isAdmin)
+    return render_template("selection_display.html", selections=get_selections(get_db()), selection_categories=get_selection_categories(get_db(), True), ingredients=get_ingredients(get_db(), True), admin=isAdmin)
 
 
 @app.route("/get_selection_category_display", methods=["GET"])
 def get_selection_category_display():
-    return render_template("selection_category_display.html", selection_categories=get_selection_categories_dictionary(get_db()), ingredients=get_ingredients_dictionary(get_db()), admin=isAdmin)
+    return render_template("selection_category_display.html", selection_categories=get_selection_categories(get_db(), True), ingredients=get_ingredients(get_db(), True), admin=isAdmin)
 
 
 ## DATABASE GET REQUEST REMOVE FUNCTIONS ##
@@ -163,6 +163,33 @@ def remove_allergene_db():
     return ""
 
 
+## CATEGORIES
+@app.route("/remove_category", methods=["GET"])
+def remove_category_db():
+    ca_id = request.args.get("ca_id", None)
+    if ca_id != None:
+        remove_category(get_db(), ca_id)
+    return ""
+
+
+## SELECTIONS
+@app.route("/remove_selection", methods=["GET"])
+def remove_selection_db():
+    s_id = request.args.get("s_id", None)
+    if s_id != None:
+        remove_selection(get_db(), s_id)
+    return ""
+
+
+## SELECTIONS
+@app.route("/remove_selection_category", methods=["GET"])
+def remove_selection_category_db():
+    sc_id = request.args.get("sc_id", None)
+    if sc_id != None:
+        remove_selection_category(get_db(), sc_id)
+    return ""
+
+
 ## DATABASE GET REQUEST GET FUNCTIONS ##
 @app.route("/get_ingredients", methods=["GET"])
 def get_ingredients_db():
@@ -199,7 +226,9 @@ def get_selection_categories_db():
 ## COURSES ##
 @app.route("/add_course", methods=["GET"])
 def insert_course_db():
-    insert_course(get_db(), "", 1, "No description available.", 1.0)
+    ca_id = get_category_end(get_db())[0]["ca_id"]
+
+    insert_course(get_db(), "", ca_id, "No description available.", 1.0)
 
     new_course_id = get_course_end(get_db())[0]["c_id"]
     unique_string = convert_number_to_unique_char_sequence(int(new_course_id))
@@ -252,9 +281,6 @@ def insert_ingredient_allergene_db():
 def insert_allergene_db():
     insert_allergene(get_db(), "")
 
-    # WEIRD BUG:
-    # For some reason allergene is sorted by name instead of id, need to find a fix for this, somehow
-
     new_allergene_id = get_allergene_end(get_db())[0]["a_id"]
     unique_string = convert_number_to_unique_char_sequence(int(new_allergene_id))
     update_allergene_name(get_db(), "allergene " + unique_string, new_allergene_id)
@@ -267,7 +293,7 @@ def insert_allergene_db():
 def insert_category_db():
     insert_category(get_db(), "")
 
-    new_category_id = get_category_end(get_db())[0]["c_id"]
+    new_category_id = get_category_end(get_db())[0]["ca_id"]
     unique_string = convert_number_to_unique_char_sequence(int(new_category_id))
     update_category_name(get_db(), "category " + unique_string, new_category_id)
 
@@ -277,7 +303,8 @@ def insert_category_db():
 ## SELECTION ##
 @app.route("/add_selection", methods=["GET"])
 def insert_selection_db():
-    insert_selection(get_db(), "", 1, "NULL")
+    sc_id = get_selection_category_end(get_db())[0]["sc_id"]
+    insert_selection(get_db(), "", sc_id, "NULL")
 
     new_selection_id = get_selection_end(get_db())[0]["s_id"]
     unique_string = convert_number_to_unique_char_sequence(int(new_selection_id))
@@ -344,6 +371,15 @@ def update_ingredient_name_db():
     i_name = request.args.get("i_name", None)
     if i_id != None and i_name != None:
         update_ingredient_name(get_db(), i_name, i_id)
+    return ""
+
+
+@app.route("/edit_ingredient_available", methods=["GET"])
+def update_ingredient_availability_db():
+    i_id = request.args.get("i_id", None)
+    available = request.args.get("available", None)
+    if available != None and i_id != None:
+        update_ingredient_availability(get_db(), available, i_id)
     return ""
 
 

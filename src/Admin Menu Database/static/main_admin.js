@@ -331,9 +331,9 @@ $(document).ready(function() {
     }
     
     function removeCategory() {
-        var info = $(this).prop("name".split("_"));
+        var info = $(this).prop("name").split("_");
         if (confirm("Are you sure you want to remove the category '" + info[0] + "'?")) {
-            $.get("/remove_category", {c_id: info[1]}, function () {
+            $.get("/remove_category", {ca_id: info[1]}, function () {
                 updateCategoryDisplay();
 
                 $.when(
@@ -360,7 +360,7 @@ $(document).ready(function() {
     }
     
     function removeSelection() {
-        var info = $(this).prop("name".split("_"));
+        var info = $(this).prop("name").split("_");
         if (confirm("Are you sure you want to remove the selection '" + info[0] + "'?")) {
             $.get("/remove_selection", {s_id: info[1]}, function () {
                 updateSelectionDisplay();
@@ -389,7 +389,7 @@ $(document).ready(function() {
     }
 
     function removeSelectionCategory() {
-        var info = $(this).prop("name".split("_"));
+        var info = $(this).prop("name").split("_");
         if (confirm("Are you sure you want to remove the selection category '" + info[0] + "'?")) {
             $.get("/remove_selection_category", {sc_id: info[1]}, function () {
                 updateSelectionCategoryDisplay();
@@ -451,6 +451,15 @@ $(document).ready(function() {
                 updateSelectionDisplay();
             });
         });
+    }
+
+    function editIngredientAvailable() {
+        var i_id = $(this).prop("name");
+        var available = $("#ingredient-edit-available_" + i_id).val();
+        $.get("/edit_ingredient_available", {i_id: i_id, available: available}, function () {
+            updateIngredientDisplay();
+            updateCourseDisplay();
+        })
     }
 
         // EDIT ALLERGENES
