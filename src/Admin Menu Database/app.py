@@ -107,6 +107,37 @@ def get_selection_category_display():
     return render_template("selection_category_display.html", selection_categories=get_selection_categories(get_db(), True), ingredients=get_ingredients(get_db(), True), admin=isAdmin)
 
 
+## DATABASE GET REQUEST GET FUNCTIONS ##
+@app.route("/get_ingredients", methods=["GET"])
+def get_ingredients_db():
+    ingredients = get_ingredients(get_db())
+    return json.dumps(ingredients)
+
+
+@app.route("/get_allergenes", methods=["GET"])
+def get_allergenes_db():
+    allergenes = get_allergenes(get_db())
+    return json.dumps(allergenes)
+
+
+@app.route("/get_categories", methods=["GET"])
+def get_categories_db():
+    categories = get_categories(get_db())
+    return json.dumps(categories)
+
+
+@app.route("/get_selections", methods=["GET"])
+def get_selections_db():
+    selections = get_selections(get_db())
+    return json.dumps(selections)
+
+
+@app.route("/get_selection_categories", methods=["GET"])
+def get_selection_categories_db():
+    selection_categories = get_selection_categories(get_db())
+    return json.dumps(selection_categories)
+    
+
 ## DATABASE GET REQUEST REMOVE FUNCTIONS ##
 
 ## COURSES ##
@@ -188,37 +219,6 @@ def remove_selection_category_db():
     if sc_id != None:
         remove_selection_category(get_db(), sc_id)
     return ""
-
-
-## DATABASE GET REQUEST GET FUNCTIONS ##
-@app.route("/get_ingredients", methods=["GET"])
-def get_ingredients_db():
-    ingredients = get_ingredients(get_db())
-    return json.dumps(ingredients)
-
-
-@app.route("/get_allergenes", methods=["GET"])
-def get_allergenes_db():
-    allergenes = get_allergenes(get_db())
-    return json.dumps(allergenes)
-
-
-@app.route("/get_categories", methods=["GET"])
-def get_categories_db():
-    categories = get_categories(get_db())
-    return json.dumps(categories)
-
-
-@app.route("/get_selections", methods=["GET"])
-def get_selections_db():
-    selections = get_selections(get_db())
-    return json.dumps(selections)
-
-
-@app.route("/get_selection_categories", methods=["GET"])
-def get_selection_categories_db():
-    selection_categories = get_selection_categories(get_db())
-    return json.dumps(selection_categories)
 
 
 ## DATABASE GET REQUEST INSERT FUNCTIONS ##
@@ -304,6 +304,7 @@ def insert_category_db():
 @app.route("/add_selection", methods=["GET"])
 def insert_selection_db():
     sc_id = get_selection_category_end(get_db())[0]["sc_id"]
+
     insert_selection(get_db(), "", sc_id, "NULL")
 
     new_selection_id = get_selection_end(get_db())[0]["s_id"]
