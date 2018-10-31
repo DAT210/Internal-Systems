@@ -108,6 +108,12 @@ def get_selection_category_display():
 
 
 ## DATABASE GET REQUEST GET FUNCTIONS ##
+@app.route("/get_courses", methods=["GET"])
+def get_courses_db():
+    courses = get_courses(get_db())
+    return json.dumps(courses)
+
+
 @app.route("/get_ingredients", methods=["GET"])
 def get_ingredients_db():
     ingredients = get_ingredients(get_db())
