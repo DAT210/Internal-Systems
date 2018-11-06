@@ -59,7 +59,7 @@ get_queries = {
     # Get all selections sorted by s_id ascending
     "get_selections": "SELECT s_id, s_name, sc_id, i_id, s_price FROM selection ORDER BY s_id ASC",
 
-    # Get selection_category by sc_id
+    # Get selections by s_id
     "get_selection_by_id": "SELECT s_id, s_name, sc_id, i_id, s_price FROM selection WHERE s_id={s_id}",
 
     # Get last selection by id
