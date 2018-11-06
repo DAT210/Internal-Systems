@@ -82,6 +82,8 @@ $(document).ready(function() {
         $(".edit_course_description").on("click", editCourseDescription);
         
         initAutocompleteCourses();
+
+        setMode();
     }
     
     function initIngredients() {
@@ -94,6 +96,8 @@ $(document).ready(function() {
         $(".edit_ingredient_name").on("click", editIngredientName);
 
         initAutocompleteIngredients();
+
+        setMode();
     }
     
     function initAllergenes() {
@@ -101,6 +105,8 @@ $(document).ready(function() {
         $(".remove_allergene").on("click", removeAllergene);
 
         $(".edit_allergene_name").on("click", editAllergeneName);
+
+        setMode();
     }
     
     function initCategories() {
@@ -108,6 +114,8 @@ $(document).ready(function() {
         $(".remove_category").on("click", removeCategory);  
 
         $(".edit_category_name").on("click", editCategoryName);
+
+        setMode();
     }
     
     function initSelections() {
@@ -120,6 +128,8 @@ $(document).ready(function() {
         $(".edit_selection_price").on("click", editSelectionPrice);
 
         initAutocompleteSelections();
+
+        setMode();
     }
     
     function initSelectionCategories() {
@@ -127,6 +137,8 @@ $(document).ready(function() {
         $(".remove_selection_category").on("click", removeSelectionCategory);  
 
         $(".edit_selection_category_name").on("click", editSelectionCategoryName);
+
+        setMode();
     }
 
     function initEdit(param) {
@@ -162,12 +174,12 @@ $(document).ready(function() {
 
     function initModeSwitch() {
         $("#dark-mode").on("click", function() {
-            setMode();
             darkMode = true;
+            setMode();
         });
         $("#light-mode").on("click", function() {
-            setMode();
             darkMode = false;
+            setMode();
         });
     }
 
@@ -699,8 +711,13 @@ function autocomplete(inp, arr) {
         }
         currentFocus = -1;
         a = document.createElement("DIV");
-        a.setAttribute("id", this.id + "autocomplete-list");
-        a.setAttribute("class", "autocomplete-items");
+        if (darkMode) {
+            a.setAttribute("id", this.id + "autocomplete-list-dark");
+            a.setAttribute("class", "autocomplete-items-dark");
+        } else {
+            a.setAttribute("id", this.id + "autocomplete-list");
+            a.setAttribute("class", "autocomplete-items");
+        }
         this.parentNode.appendChild(a);
         for (i = 0; i < arr.length; i++) {
             if (arr[i].name.substr(0, val.length).toUpperCase() == val.toUpperCase()) {
@@ -719,7 +736,12 @@ function autocomplete(inp, arr) {
         }
     });
     inp.addEventListener("keydown", function(e) {
-        var x = document.getElementById(this.id + "autocomplete-list");
+        var x;
+        if (darkMode) {
+            x = document.getElementById(this.id + "autocomplete-list-dark");
+        } else {
+            x = document.getElementById(this.id + "autocomplete-list");
+        }
         if (x) x = x.getElementsByTagName("div");
         if (e.keyCode == 40) {
             currentFocus++;
@@ -740,17 +762,30 @@ function autocomplete(inp, arr) {
         removeActive(x);
         if (currentFocus >= x.length) currentFocus = 0;
         if (currentFocus < 0) currentFocus = (x.length - 1);
-        x[currentFocus].classList.add("autocomplete-active");
+        if (darkMode) {
+            x[currentFocus].classList.add("autocomplete-active-dark");
+        } else {
+            x[currentFocus].classList.add("autocomplete-active");
+        }
     }
 
     function removeActive(x) {
         for (var i = 0; i < x.length; i++) {
-            x[i].classList.remove("autocomplete-active");
+            if (darkMode) {
+                x[i].classList.remove("autocomplete-active-dark");
+            } else {
+                x[i].classList.remove("autocomplete-active");
+            }
         }
     }
 
     function closeAllLists(elmnt) {
-        var x = document.getElementsByClassName("autocomplete-items");
+        var x;
+        if (darkMode) {
+            x = document.getElementsByClassName("autocomplete-items-dark");
+        } else {
+            x = document.getElementsByClassName("autocomplete-items");
+        }
         for (var i = 0; i < x.length; i++) {
             if (elmnt != x[i] && elmnt != inp) {
                 x[i].parentNode.removeChild(x[i]);
@@ -764,7 +799,7 @@ function autocomplete(inp, arr) {
 // END OF W3 SCHOOLS AUTOCOMPLETE
 
 function setMode() {
-    if (!darkMode) {
+    if (darkMode) {
         $("#dark-mode").css("display", "none");
         $("#light-mode").css("display", "inline");
         $("table").addClass("table-dark");

@@ -11,172 +11,32 @@
     </span>
 
     <!-- MAKE TAB -->
-    <h2>Courses</h2>
-    <table class="table table-bordered table-striped">
-        <thead>
-            <th>
-                ID
-            </th>
-            <th>
-                Info
-            </th>
-            <th>
-                Ingredients
-            </th>
-            <th>
-                Selections
-            </th>
-        </thead>
-        <tbody class="course_display">
-            {% include "course_display.html" %}
-        </tbody>
-        {% if admin %}
-        <tr>
-            <td colspan="4">
-                <div class="row justify-content-center">
-                    <input class="btn btn-success btn-lg col-4" id="add_course" value="Add New Course">
-                </div>
-            </td>
-        </tr>
-        {% endif %} 
-    </table>
-    <br>
-    
-    <!-- MAKE TAB -->
-    <h2>Ingredients</h2>
-    <table class="table table-bordered table-striped">
-        <thead>
-            <th>
-                ID
-            </th>
-            <th>
-                Name
-            </th>
-            <th>
-                Available
-            </th>
-            <th>
-                Allergenes
-            </th>
-            <th>
-                Selection Links
-            </th>
-        </thead>
-        <tbody class="ingredient_display">
-            {% include "ingredient_display.html" %}
-        </tbody>
-        {% if admin %}
-        <tr>
-            <td colspan="5">
-                <div class="row justify-content-center">
-                    <input class="btn btn-success btn-lg col-4" id="add_ingredient" value="Add New Ingredient">
-                </div>
-            </td>
-        </tr>
-        {% endif %} 
-    </table>
-    <br>
+    <span class="course_display">
+        {% include "course_display.html" %}
+    </span>
 
     <!-- MAKE TAB -->
-    <h2>Allergenes</h2>
-    <table class="table table-bordered table-striped">
-        <thead>
-            <th>
-                ID
-            </th>
-            <th>
-                Name
-            </th>
-        </thead>
-        <tbody class="allergene_display">
-            {% include "allergene_display.html" %}
-        </tbody>
-        {% if admin %}
-        <tr>
-            <td colspan="4">
-                <div class="row justify-content-center">
-                    <input class="btn btn-success btn-lg col-4" id="add_allergene" value="Add New Allergene">
-                </div>
-            </td>
-        </tr>
-        {% endif %} 
-    </table>
-    <br>
+    <span class="ingredient_display">
+        {% include "ingredient_display.html" %}
+    </span>
 
     <!-- MAKE TAB -->
-    <h2>Categories</h2>
-    <table class="table table-bordered table-striped">
-        <thead>
-            <th>
-                ID
-            </th>
-            <th>
-                Name
-            </th>
-        </thead>
-        <tbody class="category_display">
-            {% include "category_display.html" %}
-        </tbody>
-        {% if admin %}
-        <tr>
-            <td colspan="4">
-                <div class="row justify-content-center">
-                    <input class="btn btn-success btn-lg col-4" id="add_category" value="Add New Category">
-                </div>
-            </td>
-        </tr>
-        {% endif %} 
-    </table>
-    <br>
+    <span class="allergene_display">
+        {% include "allergene_display.html" %}
+    </span>
 
     <!-- MAKE TAB -->
-    <h2>Selections</h2>
-    <table class="table table-bordered table-striped">
-        <thead>
-            <th>
-                ID
-            </th>
-            <th>
-                Info
-            </th>
-        </thead>
-        <tbody class="selection_display">
-            {% include "selection_display.html" %}
-        </tbody>
-        {% if admin %}
-        <tr>
-            <td colspan="4">
-                <div class="row justify-content-center">
-                    <input class="btn btn-success btn-lg col-4" id="add_selection" value="Add New Selection">
-                </div>
-            </td>
-        </tr>
-        {% endif %} 
-    </table>
-    <br>
+    <span class="category_display">
+        {% include "category_display.html" %}
+    </span>
 
     <!-- MAKE TAB -->
-    <h2>Selection Categories</h2>
-    <table class="table table-bordered table-striped">
-        <thead>
-            <th>
-                ID
-            </th>
-            <th>
-                Name
-            </th>
-        </thead>
-        <tbody class="selection_category_display">
-            {% include "selection_category_display.html" %}
-        </tbody>
-        {% if admin %}
-        <tr>
-            <td colspan="4">
-                <div class="row justify-content-center">
-                    <input class="btn btn-success btn-lg col-4" id="add_selection_category" value="Add New Selection Category">
-                </div>
-            </td>
-        </tr>
-        {% endif %} 
-    </table>
+    <span class="selection_display">
+        {% include "selection_display.html" %}
+    </span>
+
+    <!-- MAKE TAB -->
+    <span class="selection_category_display">
+        {% include "selection_category_display.html" %}
+    </span>
 {% endblock %}
