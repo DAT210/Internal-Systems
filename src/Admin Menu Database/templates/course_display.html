@@ -92,7 +92,11 @@
                         </td>
                         <td>
                             <span class="hidden-edit-course-{{ course.c_id }}">
-                                {{ course.info }}
+                                {% if not course.info %}
+                                    <span style="color: red">No description available.</span>
+                                {% else %}
+                                    {{ course.info }}
+                                {% endif %}
                             </span>
                             <span class="hidden-default-course-{{ course.c_id }}" style="display: none">
                                 <form action="#" class="form-inline">
@@ -107,6 +111,9 @@
         </table>
         <!-- Ingredients -->
         <td style="width: 31.25%">
+            {% if course.ingredients|length < 1 %}
+                <span style="color: red">No ingredients available.</span>
+            {% endif %}
             <table>
                 {% for ingredient in course.ingredients %}
                 <tr>
@@ -135,6 +142,9 @@
         </td>
         <!-- Selections -->
         <td style="width: 31.25%">
+            {% if course.selections|length < 1 %}
+                <span style="color: blue">No selections available.</span>
+            {% endif %}
             <table>
                 {% for selection in course.selections %}
                 <tr>

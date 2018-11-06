@@ -117,6 +117,7 @@ $(document).ready(function() {
         $(".edit_selection_name").on("click", editSelectionName);
         $(".edit_selection_selection_category").on("click", editSelectionSelectionCategory);
         $(".edit_selection_ingredient").on("click", editSelectionIngredient);
+        $(".edit_selection_price").on("click", editSelectionPrice);
 
         initAutocompleteSelections();
     }
@@ -516,11 +517,24 @@ $(document).ready(function() {
         var s_id = $(this).prop("id").split("-")[1];
         var i_id = parseInt($("#autocomplete_selection_edit_ingredient-" + s_id).prop("name"));
 
-        if (isNaN(i_id)) {
+        if (i_id != i_id) {
             i_id = -1;
         }
 
         $.get("/edit_selection_ingredient", {s_id: s_id, i_id: i_id}, function () {
+            updateSelectionDisplay();
+        });
+    }
+
+    function editSelectionPrice() {
+        var s_id = $(this).prop("name");
+        var s_price = parseFloat($("#selection-edit-price_" + s_id).val());
+
+        if (s_price != s_price || s_price === 0.00) {
+            s_price = -1;
+        }
+
+        $.get("/edit_selection_price", {s_id: s_id, s_price: s_price}, function () {
             updateSelectionDisplay();
         });
     }

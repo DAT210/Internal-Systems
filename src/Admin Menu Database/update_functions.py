@@ -47,7 +47,10 @@ update_queries = {
     "update_selection_selection_category": "UPDATE selection SET sc_id={sc_id} WHERE s_id={s_id}",
 
     # Update selection ingredient by id
-    "update_selection_ingredient": "UPDATE selection SET i_id={i_id} WHERE s_id={s_id}"
+    "update_selection_ingredient": "UPDATE selection SET i_id={i_id} WHERE s_id={s_id}",
+
+    # Update selection price by id
+    "update_selection_price": "UPDATE selection SET s_price={s_price} WHERE s_id={s_id}"
 }
 
 def update_course_name(db, c_name, c_id):
@@ -271,3 +274,18 @@ def update_selection_ingredient(db, i_id, s_id):
         cur.close()
 
 
+def update_selection_price(db, s_price, s_id):
+    cur = db.cursor()
+    try :
+        if s_price == None or s_id == None:
+            return EMPTY_INPUT_EXCEPTION
+        cur.execute(update_queries["update_selection_price"].replace("{s_price}", str(s_price)).replace("{s_id}", str(s_id)))
+        db.commit()
+        if cur.rowcount == 0:
+            return NO_UPDATE_EXCEPTION
+    except (Error) as err:
+        if 'Incorrect decimal value' in str(err):
+            return INVALID_DECIMAL_VALUE
+        raise err
+    finally:
+        cur.close()

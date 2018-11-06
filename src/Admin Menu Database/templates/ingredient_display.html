@@ -33,6 +33,9 @@
         <td class="{% if ingredient.available == "1" %}bg-success{% else %}bg-danger{% endif %}" style="width: 5%"></td>
         <!-- Allergenes -->
         <td style="width: 16.125%">
+            {% if ingredient.allergenes|length < 1 %}
+                <span style="color: blue">No allergenes available.</span>
+            {% endif %}
             <table>
                 {% for allergene in ingredient.allergenes %}
                 <tr>

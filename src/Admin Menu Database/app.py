@@ -36,7 +36,7 @@ isAdmin = True
 user_info = {
     "username": "root",
     "password": "dat220pass",
-    "database": "dat210_menu",
+    "database": "menu",
     "hostname": "localhost",
 }
 
@@ -440,6 +440,20 @@ def update_selection_ingredient_db():
     else:
         if s_id != None and i_id != None:
             update_selection_ingredient(get_db(), i_id, s_id)
+    return ""
+
+
+@app.route("/edit_selection_price", methods=["GET"])
+def update_selection_price_db():
+    s_id = request.args.get("s_id", None)
+    s_price = request.args.get("s_price", None)
+
+    if float(s_price) == -1:
+        if s_id != None:
+            update_selection_price(get_db(), "NULL", s_id)
+    else:
+        if s_id != None and s_price != None:
+            update_selection_price(get_db(), s_price, s_id)
     return ""
 
 
