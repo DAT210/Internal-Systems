@@ -57,16 +57,16 @@ get_queries = {
     "get_selection_category_end": "SELECT sc_id, sc_name FROM selection_category ORDER BY sc_id DESC LIMIT 1",
 
     # Get all selections sorted by s_id ascending
-    "get_selections": "SELECT s_id, s_name, sc_id, i_id FROM selection ORDER BY s_id ASC",
+    "get_selections": "SELECT s_id, s_name, sc_id, i_id, s_price FROM selection ORDER BY s_id ASC",
 
     # Get selection_category by sc_id
-    "get_selection_by_id": "SELECT s_id, s_name, sc_id, i_id FROM selection WHERE s_id={s_id}",
+    "get_selection_by_id": "SELECT s_id, s_name, sc_id, i_id, s_price FROM selection WHERE s_id={s_id}",
 
     # Get last selection by id
-    "get_selection_end": "SELECT s_id, s_name, sc_id, i_id FROM selection ORDER BY sc_id DESC LIMIT 1",
+    "get_selection_end": "SELECT s_id, s_name, sc_id, i_id, s_price FROM selection ORDER BY sc_id DESC LIMIT 1",
 
     # Get selections by course
-    "get_selections_by_course": "SELECT s.s_id, s_name, s.sc_id, s.i_id FROM selection AS s INNER JOIN course_selection as cs ON s.s_id=cs.s_id WHERE cs.c_id={c_id}"
+    "get_selections_by_course": "SELECT s.s_id, s_name, s.sc_id, s.i_id, s.s_price FROM selection AS s INNER JOIN course_selection as cs ON s.s_id=cs.s_id WHERE cs.c_id={c_id}"
 }
 
 def __get_courses__(db, query):
@@ -130,6 +130,7 @@ def get_courses(db, as_dict = False):
         return __get_courses_dictionary__(db, get_queries["get_courses"])
     else:
         return __get_courses__(db, get_queries["get_courses"])
+
 
 def get_course_end(db, as_dict = False):
     if as_dict:
@@ -392,12 +393,13 @@ def __get_selections__(db, query):
 
     try:
         cur.execute(query)
-        for (s_id, s_name, sc_id, i_id) in cur:
+        for (s_id, s_name, sc_id, i_id, s_price) in cur:
             selections.append({
                 "s_id": str(s_id),
                 "s_name": str(s_name),
                 "sc_id": str(sc_id),
-                "i_id": str(i_id)
+                "i_id": str(i_id),
+                "s_price": str(s_price)
             })
         return selections
     finally:
@@ -410,12 +412,13 @@ def __get_selections_dictionary__(db, query):
 
     try:
         cur.execute(query)
-        for (s_id, s_name, sc_id, i_id) in cur:
+        for (s_id, s_name, sc_id, i_id, s_price) in cur:
             selections[str(s_id)] = {
                 "s_id": str(s_id),
                 "s_name": str(s_name),
                 "sc_id": str(sc_id),
-                "i_id": str(i_id)
+                "i_id": str(i_id),
+                "s_price": str(s_price)
             }
         return selections
     finally:
@@ -501,12 +504,13 @@ def get_selections_by_course(db, c_id):
         if c_id == None:
             return EMPTY_INPUT_EXCEPTION
         cur.execute(get_queries["get_selections_by_course"].replace("{c_id}", str(c_id)))
-        for (s_id, s_name, sc_id, i_id) in cur:
+        for (s_id, s_name, sc_id, i_id, s_price) in cur:
             selections.append({
                 "s_id": str(s_id),
                 "s_name": str(s_name),
                 "sc_id": str(sc_id),
-                "i_id": str(i_id)
+                "i_id": str(i_id),
+                "s_price": str(s_price)
             })
         return selections
     except (Error) as err:
