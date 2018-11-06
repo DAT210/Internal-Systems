@@ -46,6 +46,7 @@ $(document).ready(function() {
         initSelections();
         initSelectionCategories();
         initAdminFunctions();
+        initTabSwap();
     }
 
     async function initAutocompletion() {
@@ -196,6 +197,14 @@ $(document).ready(function() {
     function initAutocompleteSelections() {
         setupAutocomplete(".selection-edit-selection-category-input", selectionCategories, "sc_name", "sc_id");
         setupAutocomplete(".selection-edit-ingredient-input", ingredients, "i_name", "i_id");
+    }
+
+    function initTabSwap() {
+        $(".tab-swap").on("click", function () {
+            var link = $(this).prop("name");
+            $(".db_tab").css("display", "none");
+            $("." + link + "_display").css("display", "block");
+        });
     }
 
     /************************\
