@@ -25,7 +25,7 @@ update_queries = {
     "update_ingredient_name": "UPDATE ingredient SET i_name='{i_name}' WHERE i_id='{i_id}'",
 
     # Update ingredient availability by id
-    "update_ingredient_availability": "UPDATE ingredient SET available='{available}' WHERE i_id='{i_id}'",
+    "update_ingredient_availability": "UPDATE ingredient SET available={available} WHERE i_id='{i_id}'",
 
     # ------------------------ Allergene ------------------------
     # Update allergene name by id
@@ -159,6 +159,7 @@ def update_ingredient_availability(db, available, i_id):
             return NO_UPDATE_EXCEPTION
     except (TypeError):
         return INVALID_TYPE_EXCEPTION
+    
     finally:
         cur.close()
 
@@ -245,9 +246,7 @@ def update_selection_selection_category(db, sc_id, s_id):
             return INVALID_TYPE_EXCEPTION
         if 'Cannot add or update a child row: a foreign key constraint fails' in str(err):
             return UNKKNOWN_REFERENCE_EXCEPTION
-        print(str(err))
         raise err
-
     finally:
         cur.close()
 
@@ -262,11 +261,10 @@ def update_selection_ingredient(db, i_id, s_id):
         if cur.rowcount == 0:
             return NO_UPDATE_EXCEPTION
     except (Error) as err:
-        if 'Incorrect integer value:' in str(err):
+        if 'Unknown column' in str(err):
             return INVALID_TYPE_EXCEPTION
         if 'Cannot add or update a child row: a foreign key constraint fails' in str(err):
             return UNKKNOWN_REFERENCE_EXCEPTION
-        print(str(err))
         raise err
 
     finally:
@@ -283,8 +281,9 @@ def update_selection_price(db, s_price, s_id):
         if cur.rowcount == 0:
             return NO_UPDATE_EXCEPTION
     except (Error) as err:
-        if 'Incorrect decimal value' in str(err):
+        if 'Unknown column' in str(err):
             return INVALID_DECIMAL_VALUE
+        print(str(err))
         raise err
     finally:
         cur.close()

@@ -212,10 +212,11 @@ class TestUpdateFunctions(unittest.TestCase):
             return err
         finally:
             cur.close()
-        self.assertEqual(False, available)
+            
+        self.assertEqual(0, available)
 
         # Update available to invalid value
-        """self.assertEqual(update_ingredient_availability(db, "a", 4),
+        self.assertEqual(update_ingredient_availability(db, "a", 4),
                          INVALID_TYPE_EXCEPTION)
 
         # Update availability with non-existing id
@@ -228,7 +229,7 @@ class TestUpdateFunctions(unittest.TestCase):
 
         # Update name with empty id
         self.assertEqual(update_ingredient_availability(db, True, None),
-                         EMPTY_INPUT_EXCEPTION)"""
+                         EMPTY_INPUT_EXCEPTION)
         db.close()
 
 
