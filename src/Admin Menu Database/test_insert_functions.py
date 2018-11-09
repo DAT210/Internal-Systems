@@ -295,8 +295,8 @@ class TestInsertFunctions(unittest.TestCase):
                          INVALID_TYPE_EXCEPTION)
         
         # Insert with invalid s_price
-        self.assertEqual(insert_selection(db, "selection cat inv", 2, "a", "a"),
-                         INVALID_TYPE_EXCEPTION)
+        self.assertEqual(insert_selection(db, "selection cat inv", 2, 3, "a"),
+                         INVALID_DECIMAL_VALUE)
         
         # Insert name to existing name (name must be unique)
         self.assertEqual(insert_selection(db, "selection alpha", 1, 4, 2.15),
