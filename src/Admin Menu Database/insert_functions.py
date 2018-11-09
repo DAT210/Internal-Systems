@@ -20,7 +20,7 @@ insert_queries = {
 
     "insert_selection_category": "INSERT INTO selection_category (sc_name) VALUES ('{sc_name}')",
 
-    "insert_selection": "INSERT INTO selection (s_name, sc_id, i_id, s_price) VALUES ('{s_name}', '{sc_id}', '{i_id}', '{s_price}')",
+    "insert_selection": "INSERT INTO selection (s_name, sc_id, i_id, s_price) VALUES ('{s_name}', '{sc_id}', {i_id}, {s_price})",
 
     "insert_course_selection": "INSERT INTO course_selection (c_id, s_id) VALUES ({c_id}, {s_id})",
 
