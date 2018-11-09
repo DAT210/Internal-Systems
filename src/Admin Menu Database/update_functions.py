@@ -47,7 +47,7 @@ update_queries = {
     "update_selection_selection_category": "UPDATE selection SET sc_id='{sc_id}' WHERE s_id='{s_id}'",
 
     # Update selection ingredient by id
-    "update_selection_ingredient": "UPDATE selection SET i_id='{i_id}' WHERE s_id='{s_id}'",
+    "update_selection_ingredient": "UPDATE selection SET i_id={i_id} WHERE s_id={s_id}",
 
     # Update selection price by id
     "update_selection_price": "UPDATE selection SET s_price='{s_price}' WHERE s_id='{s_id}'"
