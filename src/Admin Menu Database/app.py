@@ -311,7 +311,7 @@ def insert_category_db():
 def insert_selection_db():
     sc_id = get_selection_category_end(get_db())[0]["sc_id"]
 
-    insert_selection(get_db(), "", sc_id, "NULL")
+    insert_selection(get_db(), "", sc_id, "NULL", "NULL")
 
     new_selection_id = get_selection_end(get_db())[0]["s_id"]
     unique_string = convert_number_to_unique_char_sequence(int(new_selection_id))

@@ -45,7 +45,7 @@ $(document).ready(function() {
         initCategories();
         initSelections();
         initSelectionCategories();
-        initAdminFunctions();
+        //initAdminFunctions();
         initTabSwap();
     }
 
@@ -69,6 +69,7 @@ $(document).ready(function() {
     
     function initCourses() {
         initEdit("course");
+        $("#add_course").on("click", addCourse);
         $(".remove_course").on("click", removeCourse);
         
         $(".add_ingredient_to_course").on("click", addIngredientToCourse);
@@ -89,6 +90,7 @@ $(document).ready(function() {
     
     function initIngredients() {
         initEdit("ingredient");
+        $("#add_ingredient").on("click", addIngredient);
         $(".remove_ingredient").on("click", removeIngredient);
         
         $(".add_allergene_to_ingredient").on("click", addAllergeneToIngredient);
@@ -103,6 +105,7 @@ $(document).ready(function() {
     
     function initAllergenes() {
         initEdit("allergene");
+        $("#add_allergene").on("click", addAllergene);
         $(".remove_allergene").on("click", removeAllergene);
 
         $(".edit_allergene_name").on("click", editAllergeneName);
@@ -112,6 +115,7 @@ $(document).ready(function() {
     
     function initCategories() {
         initEdit("category");
+        $("#add_category").on("click", addCategory);
         $(".remove_category").on("click", removeCategory);  
 
         $(".edit_category_name").on("click", editCategoryName);
@@ -121,6 +125,7 @@ $(document).ready(function() {
     
     function initSelections() {
         initEdit("selection");
+        $("#add_selection").on("click", addSelection);
         $(".remove_selection").on("click", removeSelection);
 
         $(".edit_selection_name").on("click", editSelectionName);
@@ -135,6 +140,7 @@ $(document).ready(function() {
     
     function initSelectionCategories() {
         initEdit("selection_category");
+        $("#add_selection_category").on("click", addSelectionCategory);
         $(".remove_selection_category").on("click", removeSelectionCategory);  
 
         $(".edit_selection_category_name").on("click", editSelectionCategoryName);
