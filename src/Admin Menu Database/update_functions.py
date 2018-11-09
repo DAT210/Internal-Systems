@@ -50,7 +50,7 @@ update_queries = {
     "update_selection_ingredient": "UPDATE selection SET i_id={i_id} WHERE s_id={s_id}",
 
     # Update selection price by id
-    "update_selection_price": "UPDATE selection SET s_price='{s_price}' WHERE s_id='{s_id}'"
+    "update_selection_price": "UPDATE selection SET s_price={s_price} WHERE s_id={s_id}"
 }
 
 def update_course_name(db, c_name, c_id):
