@@ -9,48 +9,48 @@ from mysql.connector import IntegrityError, DataError, Error
 update_queries = {
     # ------------------------ Course ------------------------
     # Update course name by id
-    "update_course_name": "UPDATE course SET c_name='{c_name}' WHERE c_id={c_id}",
+    "update_course_name": "UPDATE course SET c_name='{c_name}' WHERE c_id='{c_id}'",
 
     # Update course category by id
-    "update_course_category": "UPDATE course SET ca_id={ca_id} WHERE c_id={c_id}",
+    "update_course_category": "UPDATE course SET ca_id='{ca_id}' WHERE c_id='{c_id}'",
 
     # Update course info by id
-    "update_course_info": "UPDATE course SET info='{info}' WHERE c_id={c_id}",
+    "update_course_info": "UPDATE course SET info='{info}' WHERE c_id='{c_id}'",
 
     # Update course price by id
-    "update_course_price": "UPDATE course SET price='{price}' WHERE c_id={c_id}",
+    "update_course_price": "UPDATE course SET price='{price}' WHERE c_id='{c_id}'",
 
     # ------------------------ Ingredient ------------------------
     # Update ingredient name by id
-    "update_ingredient_name": "UPDATE ingredient SET i_name='{i_name}' WHERE i_id={i_id}",
+    "update_ingredient_name": "UPDATE ingredient SET i_name='{i_name}' WHERE i_id='{i_id}'",
 
     # Update ingredient availability by id
-    "update_ingredient_availability": "UPDATE ingredient SET available={available} WHERE i_id={i_id}",
+    "update_ingredient_availability": "UPDATE ingredient SET available='{available}' WHERE i_id='{i_id}'",
 
     # ------------------------ Allergene ------------------------
     # Update allergene name by id
-    "update_allergene_name": "UPDATE allergene SET a_name='{a_name}' WHERE a_id={a_id}",
+    "update_allergene_name": "UPDATE allergene SET a_name='{a_name}' WHERE a_id='{a_id}'",
 
     # ------------------------ Category ------------------------
     # Update category name by id
-    "update_category_name": "UPDATE category SET ca_name='{ca_name}' WHERE ca_id={ca_id}",
+    "update_category_name": "UPDATE category SET ca_name='{ca_name}' WHERE ca_id='{ca_id}'",
 
     # ------------------------ Selection Category ------------------------
     # Update selection category name by id
-    "update_selection_category_name": "UPDATE selection_category SET sc_name='{sc_name}' WHERE sc_id={sc_id}",
+    "update_selection_category_name": "UPDATE selection_category SET sc_name='{sc_name}' WHERE sc_id='{sc_id}'",
 
     # ------------------------ Selection ------------------------
     # Update selection name by id
-    "update_selection_name": "UPDATE selection SET s_name='{s_name}' WHERE s_id={s_id}",
+    "update_selection_name": "UPDATE selection SET s_name='{s_name}' WHERE s_id='{s_id}'",
 
     # Update selection category by id
-    "update_selection_selection_category": "UPDATE selection SET sc_id={sc_id} WHERE s_id={s_id}",
+    "update_selection_selection_category": "UPDATE selection SET sc_id='{sc_id}' WHERE s_id='{s_id}'",
 
     # Update selection ingredient by id
-    "update_selection_ingredient": "UPDATE selection SET i_id={i_id} WHERE s_id={s_id}",
+    "update_selection_ingredient": "UPDATE selection SET i_id='{i_id}' WHERE s_id='{s_id}'",
 
     # Update selection price by id
-    "update_selection_price": "UPDATE selection SET s_price={s_price} WHERE s_id={s_id}"
+    "update_selection_price": "UPDATE selection SET s_price='{s_price}' WHERE s_id='{s_id}'"
 }
 
 def update_course_name(db, c_name, c_id):
@@ -262,7 +262,6 @@ def update_selection_ingredient(db, i_id, s_id):
         if cur.rowcount == 0:
             return NO_UPDATE_EXCEPTION
     except (Error) as err:
-        print(str(err))
         if 'Incorrect integer value:' in str(err):
             return INVALID_TYPE_EXCEPTION
         if 'Cannot add or update a child row: a foreign key constraint fails' in str(err):
@@ -277,7 +276,7 @@ def update_selection_ingredient(db, i_id, s_id):
 def update_selection_price(db, s_price, s_id):
     cur = db.cursor()
     try :
-        if s_price == None or s_id == None:
+        if s_id == None:
             return EMPTY_INPUT_EXCEPTION
         cur.execute(update_queries["update_selection_price"].replace("{s_price}", str(s_price)).replace("{s_id}", str(s_id)))
         db.commit()
@@ -289,3 +288,5 @@ def update_selection_price(db, s_price, s_id):
         raise err
     finally:
         cur.close()
+
+
