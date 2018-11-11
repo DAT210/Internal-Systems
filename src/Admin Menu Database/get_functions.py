@@ -98,6 +98,11 @@ def __get_courses__(db, query):
             })
     except (DataError):
         return INPUT_TOO_LONG_EXCEPTION
+    except Error as err:
+        if 'Unknown column' in str(err):
+            return INVALID_TYPE_EXCEPTION
+        raise err
+
     finally:
         cur.close()
 
@@ -126,6 +131,10 @@ def __get_courses_dictionary__(db, query):
             }
     except (DataError):
         return INPUT_TOO_LONG_EXCEPTION
+    except Error as err:
+        if 'Unknown column' in str(err):
+            return INVALID_TYPE_EXCEPTION
+        raise err
     finally:
         cur.close()
 
@@ -218,6 +227,10 @@ def __get_ingredients__(db, query):
             })
     except (DataError):
         return INPUT_TOO_LONG_EXCEPTION
+    except Error as err:
+        if 'Unknown column' in str(err):
+            return INVALID_TYPE_EXCEPTION
+        raise err
     finally:
         cur.close()
 
@@ -244,6 +257,10 @@ def __get_ingredients_dictionary__(db, query):
             }
     except (DataError):
         return INPUT_TOO_LONG_EXCEPTION
+    except Error as err:
+        if 'Unknown column' in str(err):
+            return INVALID_TYPE_EXCEPTION
+        raise err
     finally:
         cur.close()
 
@@ -299,6 +316,10 @@ def __get_allergenes__(db, query):
             })
     except (DataError):
         return INPUT_TOO_LONG_EXCEPTION
+    except Error as err:
+        if 'Unknown column' in str(err):
+            return INVALID_TYPE_EXCEPTION
+        raise err
     finally:
         cur.close()
 
@@ -318,6 +339,10 @@ def __get_allergenes_dictionary__(db, query):
             }
     except (DataError):
         return INPUT_TOO_LONG_EXCEPTION
+    except Error as err:
+        if 'Unknown column' in str(err):
+            return INVALID_TYPE_EXCEPTION
+        raise err
     finally:
         cur.close()
 
@@ -481,6 +506,10 @@ def __get_selections__(db, query):
                 "s_price": str(s_price)
             })
         return selections
+    except Error as err:
+        if 'Unknown column' in str(err):
+            return INVALID_TYPE_EXCEPTION
+        raise err
     finally:
         cur.close()
 
@@ -500,6 +529,10 @@ def __get_selections_dictionary__(db, query):
                 "s_price": str(s_price)
             }
         return selections
+    except Error as err:
+        if 'Unknown column' in str(err):
+            return INVALID_TYPE_EXCEPTION
+        raise err
     finally:
         cur.close()
 
