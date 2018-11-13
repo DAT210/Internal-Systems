@@ -68,11 +68,11 @@ class TestGetFunctions(unittest.TestCase):
     def test_get_ingredients(self):
         db = get_db()
 
-        # Get values and compare to expected results
+        # Get values and compare to expected results (list)
         ingredients = get_ingredients(db)
         self.assertEqual(str(ingredients), expected_return_values["get_ingredients"])
 
-        # Get values and compare to expected results
+        # Get values and compare to expected results (dictionary)
         ingredients = get_ingredients(db, True)
         self.assertEqual(ingredients, expected_return_dictionary["get_ingredients"])
 
