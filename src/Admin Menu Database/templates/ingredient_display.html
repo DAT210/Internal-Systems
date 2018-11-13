@@ -84,7 +84,13 @@
                 <!-- Selection Links -->
                 <td style="width: 16.125%">
                     <table>
-
+                        {% for selection in ingredient.selections %}
+                        <tr>
+                            <td style="width: 16.666%">
+                                {{ selection.s_name }}
+                            </td> 
+                        </tr>
+                        {% endfor %}
                     </table>
                 </td>
             </tr>

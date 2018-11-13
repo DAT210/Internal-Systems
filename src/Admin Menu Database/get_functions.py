@@ -189,7 +189,7 @@ def get_courses_id_name(db, as_dict = False):
         return __get_courses_id_name__(db, get_queries["get_courses_id_name"])
 
 
-def __get_ingredients__(db, query):
+def __get_ingredients__(db, query, with_allergenes, with_selections):
     cur = db.cursor()
     ingredients = []
 
@@ -212,14 +212,16 @@ def __get_ingredients__(db, query):
     finally:
         cur.close()
 
-    for i in ingredients:
-        i["allergenes"] = get_allergenes_by_ingredient(db, i["i_id"])
-    for i in ingredients:
-        i["selections"] = get_selections_by_ingredient(db, i["i_id"])
+    if with_allergenes:
+        for i in ingredients:
+            i["allergenes"] = get_allergenes_by_ingredient(db, i["i_id"])
+    if with_selections:
+        for i in ingredients:
+            i["selections"] = get_selections_by_ingredient(db, i["i_id"])
     return ingredients
 
 
-def __get_ingredients_dictionary__(db, query):
+def __get_ingredients_dictionary__(db, query, with_allergenes, with_selections):
     cur = db.cursor()
     ingredients = {}
 
@@ -241,44 +243,46 @@ def __get_ingredients_dictionary__(db, query):
         raise err
     finally:
         cur.close()
-
-    for _, i in ingredients.items():
-        i["allergenes"] = get_allergenes_by_ingredient(db, i["i_id"])
-    for _, i in ingredients.items():
-        i["selections"] = get_selections_by_ingredient(db, i["i_id"])
+    
+    if with_allergenes:
+        for _, i in ingredients.items():
+            i["allergenes"] = get_allergenes_by_ingredient(db, i["i_id"])
+    if with_selections:
+        for _, i in ingredients.items():
+            i["selections"] = get_selections_by_ingredient(db, i["i_id"])
     return ingredients
 
 
-def get_ingredients(db, as_dict = False):
+def get_ingredients(db, as_dict = False, with_allergenes = True, with_selections = True):
     if as_dict:
-        return __get_ingredients_dictionary__(db, get_queries["get_ingredients"])
+        return __get_ingredients_dictionary__(db, get_queries["get_ingredients"], with_allergenes, with_selections)
     else:
-        return __get_ingredients__(db, get_queries["get_ingredients"])
+        return __get_ingredients__(db, get_queries["get_ingredients"], with_allergenes, with_selections)
 
 
-def get_ingredient_end(db, as_dict = False):
+def get_ingredient_end(db, as_dict = False, with_allergenes = True, with_selections = True):
     if as_dict:
-        return __get_ingredients_dictionary__(db, get_queries["get_ingredient_end"])
+        return __get_ingredients_dictionary__(db, get_queries["get_ingredient_end"], with_allergenes, with_selections)
     else:
-        return __get_ingredients__(db, get_queries["get_ingredient_end"])
+        return __get_ingredients__(db, get_queries["get_ingredient_end"], with_allergenes, with_selections)
 
 
-def get_ingredient_by_id(db, i_id, as_dict = False):
+def get_ingredient_by_id(db, i_id, as_dict = False, with_allergenes = True, with_selections = True):
     if i_id == None:
         return EMPTY_INPUT_EXCEPTION
     if as_dict:
-        return __get_ingredients_dictionary__(db, get_queries["get_ingredient_by_id"].replace("{i_id}", str(i_id)))
+        return __get_ingredients_dictionary__(db, get_queries["get_ingredient_by_id"].replace("{i_id}", str(i_id)), with_allergenes, with_selections)
     else:
-        return __get_ingredients__(db, get_queries["get_ingredient_by_id"].replace("{i_id}", str(i_id)))
+        return __get_ingredients__(db, get_queries["get_ingredient_by_id"].replace("{i_id}", str(i_id)), with_allergenes, with_selections)
 
 
-def get_ingredients_by_course(db, c_id, as_dict = False):
+def get_ingredients_by_course(db, c_id, as_dict = False, with_allergenes = True, with_selections = True):
     if c_id == None:
         return EMPTY_INPUT_EXCEPTION
     if as_dict:
-        return __get_ingredients_dictionary__(db, get_queries["get_ingredients_by_course"].replace("{c_id}", str(c_id)))
+        return __get_ingredients_dictionary__(db, get_queries["get_ingredients_by_course"].replace("{c_id}", str(c_id)), with_allergenes, with_selections)
     else:
-        return __get_ingredients__(db, get_queries["get_ingredients_by_course"].replace("{c_id}", str(c_id)))
+        return __get_ingredients__(db, get_queries["get_ingredients_by_course"].replace("{c_id}", str(c_id)), with_allergenes, with_selections)
 
 
 def __get_allergenes__(db, query):
