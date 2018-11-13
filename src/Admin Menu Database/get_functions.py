@@ -80,22 +80,36 @@ get_queries = {
     "get_selections_by_ingredient": "SELECT s.s_id, s.s_name, s.sc_id, s.i_id, s.s_price FROM selection AS s WHERE s.i_id={i_id}"
 }
 
-def __get_courses__(db, query):
+def __get_courses__(db, query, as_dict = False):
     cur = db.cursor()
     courses = []
-
+    if as_dict:
+        courses = {}
+        
     try:
         cur.execute(query)
-        for (c_id, c_name, ca_id, info, price) in cur:
-            courses.append({
-                "c_id": str(c_id),
-                "c_name": str(c_name),
-                "ca_id": str(ca_id),
-                "info": str(info),
-                "price": str(price),
-                "ingredients": [],
-                "selections": []
-            })
+        if as_dict:
+            for (c_id, c_name, ca_id, info, price) in cur:
+                courses[str(c_id)] = {
+                    "c_id": str(c_id),
+                    "c_name": str(c_name),
+                    "ca_id": str(ca_id),
+                    "info": str(info),
+                    "price": str(price),
+                    "ingredients": [],
+                    "selections": []
+            }
+        else:
+            for (c_id, c_name, ca_id, info, price) in cur:
+                courses.append({
+                    "c_id": str(c_id),
+                    "c_name": str(c_name),
+                    "ca_id": str(ca_id),
+                    "info": str(info),
+                    "price": str(price),
+                    "ingredients": [],
+                    "selections": []
+                })
     except (DataError):
         return INPUT_TOO_LONG_EXCEPTION
     except Error as err:
@@ -106,10 +120,16 @@ def __get_courses__(db, query):
     finally:
         cur.close()
 
-    for c in courses:
-        c["ingredients"] = get_ingredients_by_course(db, c["c_id"])
-    for c in courses:
-        c["selections"] = get_selections_by_course(db, c["c_id"])
+    if as_dict:
+        for _, c in courses.items():
+            c["ingredients"] = get_ingredients_by_course(db, c["c_id"])
+        for _, c in courses.items():
+            c["selections"] = get_selections_by_course(db, c["c_id"])
+    else:
+        for c in courses:
+            c["ingredients"] = get_ingredients_by_course(db, c["c_id"])
+        for c in courses:
+            c["selections"] = get_selections_by_course(db, c["c_id"])
     return courses
 
 
@@ -146,27 +166,17 @@ def __get_courses_dictionary__(db, query):
 
 
 def get_courses(db, as_dict = False):
-    if as_dict:
-        return __get_courses_dictionary__(db, get_queries["get_courses"])
-    else:
-        return __get_courses__(db, get_queries["get_courses"])
+    return __get_courses__(db, get_queries["get_courses"], as_dict)
 
 
 def get_course_end(db, as_dict = False):
-    if as_dict:
-        return __get_courses_dictionary__(db, get_queries["get_course_end"])
-    else:
-        return __get_courses__(db, get_queries["get_course_end"])
+    return __get_courses__(db, get_queries["get_course_end"], as_dict)
 
 
 def get_course_by_id(db, c_id, as_dict = False):
     if c_id == None:
         return EMPTY_INPUT_EXCEPTION
-    if as_dict:
-        return __get_courses_dictionary__(db, get_queries["get_course_by_id"].replace("{c_id}", str(c_id)))
-    else:
-        return __get_courses__(db, get_queries["get_course_by_id"].replace("{c_id}", str(c_id)))
-
+    return __get_courses__(db, get_queries["get_course_by_id"].replace("{c_id}", str(c_id)), as_dict)
 
 def __get_courses_id_name__(db, query):
     cur = db.cursor()
