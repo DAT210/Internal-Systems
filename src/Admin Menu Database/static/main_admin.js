@@ -750,6 +750,42 @@ function autocomplete(inp, arr) {
             }
         }
     });
+    // This doesn't QUITE work, the idea for this is to make the autocomplete fields show all the elements
+    // when nothing is written, but I don't have the time right now to properly implement it.
+    /*
+    inp.addEventListener("mouseover", function(e) {
+        var a, b, i, val = this.value;
+        closeAllLists();
+        currentFocus = -1;
+        a = document.createElement("DIV");
+        if (darkMode) {
+            a.setAttribute("id", this.id + "autocomplete-list-dark");
+            a.setAttribute("class", "autocomplete-items-dark");
+        } else {
+            a.setAttribute("id", this.id + "autocomplete-list");
+            a.setAttribute("class", "autocomplete-items");
+        }
+        this.parentNode.appendChild(a);
+        for (i = 0; i < arr.length; i++) {
+            if (arr[i].name.substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+                b = document.createElement("DIV");
+                b.innerHTML = "<strong>" + arr[i].name.substr(0, val.length) + "</strong>";
+                b.innerHTML += arr[i].name.substr(val.length);
+                b.innerHTML += "<input type='hidden' value='" + arr[i].name + "'>";
+                b.innerHTML += "<input type='hidden' value='" + arr[i].id + "'>";
+                b.addEventListener("click", function(e) {
+                    inp.value = this.getElementsByTagName("input")[0].value;
+                    inp.name = this.getElementsByTagName("input")[1].value;
+                    closeAllLists();
+                });
+                a.appendChild(b);
+            }
+        }
+    });
+    inp.addEventListener("mouseout", function(e) {
+        closeAllLists();
+    });
+    */
     inp.addEventListener("keydown", function(e) {
         var x;
         if (darkMode) {
