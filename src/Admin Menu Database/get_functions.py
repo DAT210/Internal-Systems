@@ -80,7 +80,7 @@ get_queries = {
     "get_selections_by_ingredient": "SELECT s.s_id, s.s_name, s.sc_id, s.i_id, s.s_price FROM selection AS s WHERE s.i_id={i_id}"
 }
 
-def __get_courses__(db, query, as_dict = False):
+def __get_courses__(db, query, as_dict):
     cur = db.cursor()
     courses = []
     if as_dict:
@@ -189,20 +189,32 @@ def get_courses_id_name(db, as_dict = False):
         return __get_courses_id_name__(db, get_queries["get_courses_id_name"])
 
 
-def __get_ingredients__(db, query, with_allergenes, with_selections):
+def __get_ingredients__(db, query, as_dict, with_allergenes, with_selections):
     cur = db.cursor()
     ingredients = []
-
+    if as_dict:
+        ingredients = {}
     try:
         cur.execute(query)
-        for (i_id, i_name, available) in cur:
-            ingredients.append({
-                "i_id": str(i_id),
-                "i_name": str(i_name),
-                "available": str(available),
-                "allergenes": [],
-                "selections": []
-            })
+        if as_dict:
+            for (i_id, i_name, available) in cur:
+                ingredients[str(i_id)] = {
+                    "i_id": str(i_id),
+                    "i_name": str(i_name),
+                    "available": str(available),
+                    "allergenes": [],
+                    "selections": []
+                }
+        else:
+            for (i_id, i_name, available) in cur:
+                ingredients.append({
+                    "i_id": str(i_id),
+                    "i_name": str(i_name),
+                    "available": str(available),
+                    "allergenes": [],
+                    "selections": []
+                })
+
     except (DataError):
         return INPUT_TOO_LONG_EXCEPTION
     except Error as err:
@@ -212,90 +224,62 @@ def __get_ingredients__(db, query, with_allergenes, with_selections):
     finally:
         cur.close()
 
-    if with_allergenes:
-        for i in ingredients:
-            i["allergenes"] = get_allergenes_by_ingredient(db, i["i_id"])
-    if with_selections:
-        for i in ingredients:
-            i["selections"] = get_selections_by_ingredient(db, i["i_id"])
-    return ingredients
-
-
-def __get_ingredients_dictionary__(db, query, with_allergenes, with_selections):
-    cur = db.cursor()
-    ingredients = {}
-
-    try:
-        cur.execute(query)
-        for (i_id, i_name, available) in cur:
-            ingredients[str(i_id)] = {
-                "i_id": str(i_id),
-                "i_name": str(i_name),
-                "available": str(available),
-                "allergenes": [],
-                "selections": []
-            }
-    except (DataError):
-        return INPUT_TOO_LONG_EXCEPTION
-    except Error as err:
-        if 'Unknown column' in str(err):
-            return INVALID_TYPE_EXCEPTION
-        raise err
-    finally:
-        cur.close()
-    
-    if with_allergenes:
-        for _, i in ingredients.items():
-            i["allergenes"] = get_allergenes_by_ingredient(db, i["i_id"])
-    if with_selections:
-        for _, i in ingredients.items():
-            i["selections"] = get_selections_by_ingredient(db, i["i_id"])
+    if as_dict:
+        if with_allergenes:
+            for _, i in ingredients.items():
+                i["allergenes"] = get_allergenes_by_ingredient(db, i["i_id"])
+        if with_selections:
+            for _, i in ingredients.items():
+                i["selections"] = get_selections_by_ingredient(db, i["i_id"])
+    else:
+        if with_allergenes:
+            for i in ingredients:
+                i["allergenes"] = get_allergenes_by_ingredient(db, i["i_id"])
+        if with_selections:
+            for i in ingredients:
+                i["selections"] = get_selections_by_ingredient(db, i["i_id"])
     return ingredients
 
 
 def get_ingredients(db, as_dict = False, with_allergenes = True, with_selections = True):
-    if as_dict:
-        return __get_ingredients_dictionary__(db, get_queries["get_ingredients"], with_allergenes, with_selections)
-    else:
-        return __get_ingredients__(db, get_queries["get_ingredients"], with_allergenes, with_selections)
+    return __get_ingredients__(db, get_queries["get_ingredients"], as_dict, with_allergenes, with_selections)
 
 
 def get_ingredient_end(db, as_dict = False, with_allergenes = True, with_selections = True):
-    if as_dict:
-        return __get_ingredients_dictionary__(db, get_queries["get_ingredient_end"], with_allergenes, with_selections)
-    else:
-        return __get_ingredients__(db, get_queries["get_ingredient_end"], with_allergenes, with_selections)
+    return __get_ingredients__(db, get_queries["get_ingredient_end"], as_dict, with_allergenes, with_selections)
 
 
 def get_ingredient_by_id(db, i_id, as_dict = False, with_allergenes = True, with_selections = True):
     if i_id == None:
         return EMPTY_INPUT_EXCEPTION
-    if as_dict:
-        return __get_ingredients_dictionary__(db, get_queries["get_ingredient_by_id"].replace("{i_id}", str(i_id)), with_allergenes, with_selections)
-    else:
-        return __get_ingredients__(db, get_queries["get_ingredient_by_id"].replace("{i_id}", str(i_id)), with_allergenes, with_selections)
+    return __get_ingredients__(db, get_queries["get_ingredient_by_id"].replace("{i_id}", str(i_id)), as_dict, with_allergenes, with_selections)
 
 
 def get_ingredients_by_course(db, c_id, as_dict = False, with_allergenes = True, with_selections = True):
     if c_id == None:
         return EMPTY_INPUT_EXCEPTION
-    if as_dict:
-        return __get_ingredients_dictionary__(db, get_queries["get_ingredients_by_course"].replace("{c_id}", str(c_id)), with_allergenes, with_selections)
-    else:
-        return __get_ingredients__(db, get_queries["get_ingredients_by_course"].replace("{c_id}", str(c_id)), with_allergenes, with_selections)
+    return __get_ingredients__(db, get_queries["get_ingredients_by_course"].replace("{c_id}", str(c_id)), as_dict, with_allergenes, with_selections)
 
 
-def __get_allergenes__(db, query):
+def __get_allergenes__(db, query, as_dict):
     cur = db.cursor()
     allergenes = []
-
+    if as_dict:
+        allergenes = {}
     try:
         cur.execute(query)
-        for (a_id, a_name) in cur:
-            allergenes.append({
-                "a_id": str(a_id),
-                "a_name": str(a_name)
-            })
+        if as_dict:
+            for (a_id, a_name) in cur:
+                allergenes[str(a_id)] = {
+                    "a_id": str(a_id),
+                    "a_name": str(a_name)
+                }
+        else:
+            for (a_id, a_name) in cur:
+                allergenes.append({
+                    "a_id": str(a_id),
+                    "a_name": str(a_name)
+                })
     except (DataError):
         return INPUT_TOO_LONG_EXCEPTION
     except Error as err:
@@ -332,35 +316,23 @@ def __get_allergenes_dictionary__(db, query):
 
 
 def get_allergenes(db, as_dict = False):
-    if as_dict:
-        return __get_allergenes_dictionary__(db, get_queries["get_allergenes"])
-    else:
-        return __get_allergenes__(db, get_queries["get_allergenes"])
+    return __get_allergenes__(db, get_queries["get_allergenes"], as_dict)
 
 
 def get_allergene_end(db, as_dict = False):
-    if as_dict:
-        return __get_allergenes_dictionary__(db, get_queries["get_allergene_end"])
-    else:
-        return __get_allergenes__(db, get_queries["get_allergene_end"])
+    return __get_allergenes__(db, get_queries["get_allergene_end"], as_dict)
 
 
 def get_allergene_by_id(db, a_id, as_dict = False):
     if a_id == None:
         return EMPTY_INPUT_EXCEPTION
-    if as_dict:
-        return __get_allergenes_dictionary__(db, get_queries["get_allergene_by_id"].replace("{a_id}", str(a_id)))
-    else:
-        return __get_allergenes__(db, get_queries["get_allergene_by_id"].replace("{a_id}", str(a_id)))
+    return __get_allergenes__(db, get_queries["get_allergene_by_id"].replace("{a_id}", str(a_id)), as_dict)
 
 
 def get_allergenes_by_ingredient(db, i_id, as_dict = False):
     if i_id == None:
         return EMPTY_INPUT_EXCEPTION
-    if as_dict:
-        return __get_allergenes_dictionary__(db, get_queries["get_allergenes_by_ingredient"].replace("{i_id}", str(i_id)))
-    else:
-        return __get_allergenes__(db, get_queries["get_allergenes_by_ingredient"].replace("{i_id}", str(i_id)))
+    return __get_allergenes__(db, get_queries["get_allergenes_by_ingredient"].replace("{i_id}", str(i_id)), as_dict)
 
 
 def __get_categories__(db, query):
