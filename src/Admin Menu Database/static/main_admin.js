@@ -45,7 +45,7 @@ $(document).ready(function() {
         initCategories();
         initSelections();
         initSelectionCategories();
-        //initAdminFunctions();
+        // initAdminFunctions(); // Unused for now, was used earlier, but not necessary now due to tab implementation
         initTabSwap();
     }
 
