@@ -133,38 +133,6 @@ def __get_courses__(db, query, as_dict = False):
     return courses
 
 
-def __get_courses_dictionary__(db, query):
-    cur = db.cursor()
-    courses = {}
-
-    try:
-        cur.execute(query)
-        for (c_id, c_name, ca_id, info, price) in cur:
-            courses[str(c_id)] = {
-                "c_id": str(c_id),
-                "c_name": str(c_name),
-                "ca_id": str(ca_id),
-                "info": str(info),
-                "price": str(price),
-                "ingredients": [],
-                "selections": []
-            }
-    except (DataError):
-        return INPUT_TOO_LONG_EXCEPTION
-    except Error as err:
-        if 'Unknown column' in str(err):
-            return INVALID_TYPE_EXCEPTION
-        raise err
-    finally:
-        cur.close()
-
-    for _, c in courses.items():
-        c["ingredients"] = get_ingredients_by_course(db, c["c_id"])
-    for _, c in courses.items():
-        c["selections"] = get_selections_by_course(db, c["c_id"])
-    return courses
-
-
 def get_courses(db, as_dict = False):
     return __get_courses__(db, get_queries["get_courses"], as_dict)
 
