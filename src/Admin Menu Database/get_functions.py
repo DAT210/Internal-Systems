@@ -146,47 +146,37 @@ def get_course_by_id(db, c_id, as_dict = False):
         return EMPTY_INPUT_EXCEPTION
     return __get_courses__(db, get_queries["get_course_by_id"].replace("{c_id}", str(c_id)), as_dict)
 
-def __get_courses_id_name__(db, query):
+def __get_courses_id_name__(db, query, as_dict):
     cur = db.cursor()
     courses = []
+    if as_dict:
+        courses = {}
 
     try:
         cur.execute(query)
-        for (c_id, c_name) in cur:
-            courses.append({
-                "c_id": str(c_id),
-                "c_name": str(c_name),
-            });
+        if as_dict:
+            for (c_id, c_name) in cur:
+                courses[str(c_id)] = {
+                    "c_id": str(c_id),
+                    "c_name": str(c_name),
+                }
+        else:
+            for (c_id, c_name) in cur:
+                courses.append({
+                    "c_id": str(c_id),
+                    "c_name": str(c_name),
+                })
             return courses
     except (DataError):
         return UNKKNOWN_REFERENCE_EXCEPTION
     finally:
         cur.close()
 
-
-def __get_courses_id_name_dictionary__(db, query):
-    cur = db.cursor()
-    courses = {}
-    
-    try:
-        cur.execute(query)
-        for (c_id, c_name) in cur:
-            courses[str(c_id)] = {
-                "c_id": str(c_id),
-                "c_name": str(c_name),
-            }
-            return courses
-    except (DataError):
-        return UNKKNOWN_REFERENCE_EXCEPTION
-    finally:
-        cur.close()
+    return courses
 
 
 def get_courses_id_name(db, as_dict = False):
-    if as_dict:
-        return __get_courses_id_name_dictionary__(db, get_queries["get_courses_id_name"])
-    else:
-        return __get_courses_id_name__(db, get_queries["get_courses_id_name"])
+    return __get_courses_id_name__(db, get_queries["get_courses_id_name"], as_dict)
 
 
 def __get_ingredients__(db, query, as_dict, with_allergenes, with_selections):
@@ -445,21 +435,34 @@ def get_selection_category_by_id(db, sc_id, as_dict = False):
         return __get_selection_categories__(db, get_queries["get_selection_category_by_id"].replace("{sc_id}", str(sc_id)))
 
 
-def __get_selections__(db, query):
+def __get_selections__(db, query, as_dict):
     cur = db.cursor()
     selections = []
+    if as_dict:
+        selections = {}
 
     try:
         cur.execute(query)
-        for (s_id, s_name, sc_id, i_id, s_price) in cur:
-            selections.append({
-                "s_id": str(s_id),
-                "s_name": str(s_name),
-                "sc_id": str(sc_id),
-                "i_id": str(i_id),
-                "s_price": str(s_price)
-            })
-        return selections
+        if as_dict:
+            for (s_id, s_name, sc_id, i_id, s_price) in cur:
+                selections[str(s_id)] = {
+                    "s_id": str(s_id),
+                    "s_name": str(s_name),
+                    "sc_id": str(sc_id),
+                    "i_id": str(i_id),
+                    "s_price": str(s_price)
+                }
+        else:
+            for (s_id, s_name, sc_id, i_id, s_price) in cur:
+                selections.append({
+                    "s_id": str(s_id),
+                    "s_name": str(s_name),
+                    "sc_id": str(sc_id),
+                    "i_id": str(i_id),
+                    "s_price": str(s_price)
+                })    
+        
+        
     except Error as err:
         if 'Unknown column' in str(err):
             return INVALID_TYPE_EXCEPTION
@@ -467,66 +470,30 @@ def __get_selections__(db, query):
     finally:
         cur.close()
 
-
-def __get_selections_dictionary__(db, query):
-    cur = db.cursor()
-    selections = {}
-
-    try:
-        cur.execute(query)
-        for (s_id, s_name, sc_id, i_id, s_price) in cur:
-            selections[str(s_id)] = {
-                "s_id": str(s_id),
-                "s_name": str(s_name),
-                "sc_id": str(sc_id),
-                "i_id": str(i_id),
-                "s_price": str(s_price)
-            }
-        return selections
-    except Error as err:
-        if 'Unknown column' in str(err):
-            return INVALID_TYPE_EXCEPTION
-        raise err
-    finally:
-        cur.close()
+    return selections
 
 
 def get_selections(db, as_dict = False):
-    if as_dict:
-        return __get_selections_dictionary__(db, get_queries["get_selections"])
-    else:
-        return __get_selections__(db, get_queries["get_selections"])
+    return __get_selections__(db, get_queries["get_selections"], as_dict)
 
 
 def get_selection_end(db, as_dict = False):
-    if as_dict:
-        return __get_selections_dictionary__(db, get_queries["get_selection_end"])
-    else:
-        return __get_selections__(db, get_queries["get_selection_end"])
+    return __get_selections__(db, get_queries["get_selection_end"], as_dict)
 
 
 def get_selection_by_id(db, s_id, as_dict = False):
     if s_id == None:
         return EMPTY_INPUT_EXCEPTION
-    if as_dict:
-        return __get_selections_dictionary__(db, get_queries["get_selection_by_id"].replace("{s_id}", str(s_id)))
-    else:
-        return __get_selections__(db, get_queries["get_selection_by_id"].replace("{s_id}", str(s_id)))
+    return __get_selections__(db, get_queries["get_selection_by_id"].replace("{s_id}", str(s_id)), as_dict)
 
 
 def get_selections_by_course(db, c_id, as_dict = False):
     if c_id == None:
         return EMPTY_INPUT_EXCEPTION
-    if as_dict:
-        return __get_selections_dictionary__(db, get_queries["get_selections_by_course"].replace("{c_id}", str(c_id)))
-    else:
-        return __get_selections__(db, get_queries["get_selections_by_course"].replace("{c_id}", str(c_id)))
+    return __get_selections__(db, get_queries["get_selections_by_course"].replace("{c_id}", str(c_id)), as_dict)
 
 
 def get_selections_by_ingredient(db, i_id, as_dict = False):
     if i_id == None:
         return EMPTY_INPUT_EXCEPTION
-    if as_dict:
-        return __get_selections_dictionary__(db, get_queries["get_selections_by_ingredient"].replace("{i_id}", str(i_id)))
-    else:
-        return __get_selections__(db, get_queries["get_selections_by_ingredient"].replace("{i_id}", str(i_id)))
+    return __get_selections__(db, get_queries["get_selections_by_ingredient"].replace("{i_id}", str(i_id)), as_dict)
