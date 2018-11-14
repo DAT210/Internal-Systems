@@ -392,6 +392,7 @@ $(document).ready(function() {
         if (confirm("Are you sure you want to remove the selection '" + info[0] + "'?")) {
             $.get("/remove_selection", {s_id: info[1]}, function () {
                 updateSelectionDisplay();
+                updateIngredientDisplay();
                 
                 $.when(
                     updateSelections()
