@@ -137,8 +137,13 @@ def insert_selection(db, s_name, sc_id, i_id, s_price):
     try:
         if s_name == None or sc_id == None:
             return EMPTY_INPUT_EXCEPTION
-        if not (s_price == None or type(s_price) == float):
-            return INVALID_DECIMAL_VALUE
+        #if not (s_price == None or type(s_price) == float or s_price != "NULL"):
+        if s_price != "NULL":
+            try:
+                float(s_price)
+            except (ValueError(float)):
+                return INVALID_DECIMAL_VALUE
+
         cur.execute(insert_queries["insert_selection"].replace("{s_name}", s_name).replace("{sc_id}", str(sc_id)).replace("{i_id}", str(i_id)).replace("{s_price}", str(s_price)))
         db.commit()
     except (IntegrityError) as err:
