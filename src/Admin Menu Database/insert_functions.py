@@ -138,11 +138,10 @@ def insert_selection(db, s_name, sc_id, i_id, s_price):
         if s_name == None or sc_id == None or i_id == None or s_price == None:
             return EMPTY_INPUT_EXCEPTION
 
-
         if s_price != "NULL":
             try:
                 float(s_price)
-            except (ValueError(float)):
+            except:
                 return INVALID_DECIMAL_VALUE
 
         cur.execute(insert_queries["insert_selection"].replace("{s_name}", s_name).replace("{sc_id}", str(sc_id)).replace("{i_id}", str(i_id)).replace("{s_price}", str(s_price)))
