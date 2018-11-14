@@ -280,30 +280,7 @@ def __get_allergenes__(db, query, as_dict):
         cur.close()
 
     return allergenes
-
-
-def __get_allergenes_dictionary__(db, query):
-    cur = db.cursor()
-    allergenes = {}
-
-    try:
-        cur.execute(query)
-        for (a_id, a_name) in cur:
-            allergenes[str(a_id)] = {
-                "a_id": str(a_id),
-                "a_name": str(a_name)
-            }
-    except (DataError):
-        return INPUT_TOO_LONG_EXCEPTION
-    except Error as err:
-        if 'Unknown column' in str(err):
-            return INVALID_TYPE_EXCEPTION
-        raise err
-    finally:
-        cur.close()
-
-    return allergenes
-
+    
 
 def get_allergenes(db, as_dict = False):
     return __get_allergenes__(db, get_queries["get_allergenes"], as_dict)
@@ -325,20 +302,33 @@ def get_allergenes_by_ingredient(db, i_id, as_dict = False):
     return __get_allergenes__(db, get_queries["get_allergenes_by_ingredient"].replace("{i_id}", str(i_id)), as_dict)
 
 
-def __get_categories__(db, query):
+def __get_categories__(db, query, as_dict):
     cur = db.cursor()
     categories = []
+    if as_dict:
+        categories = {}
 
     try:
         cur.execute(query)
-        for (ca_id, ca_name) in cur:
-            categories.append({
-                "ca_id": str(ca_id),
-                "ca_name": str(ca_name)
-            })
-        return categories
+        if as_dict:
+            for (ca_id, ca_name) in cur:
+                categories[str(ca_id)] = {
+                    "ca_id": str(ca_id),
+                    "ca_name": str(ca_name)
+                }
+        else:
+            for (ca_id, ca_name) in cur:
+                categories.append({
+                    "ca_id": str(ca_id),
+                    "ca_name": str(ca_name)
+                })
+    except Error as err:
+        if 'Unknown column' in str(err):
+            return INVALID_TYPE_EXCEPTION
+        raise err
     finally:
         cur.close()
+    return categories
 
 
 def __get_categories_dictionary__(db, query):
@@ -358,81 +348,60 @@ def __get_categories_dictionary__(db, query):
 
 
 def get_categories(db, as_dict = False):
-    if as_dict:
-        return __get_categories_dictionary__(db, get_queries["get_categories"])
-    else:
-        return __get_categories__(db, get_queries["get_categories"])
+    return __get_categories__(db, get_queries["get_categories"], as_dict)
 
 
 def get_category_end(db, as_dict = False):
-    if as_dict:
-        return __get_categories_dictionary__(db, get_queries["get_category_end"])
-    else:
-        return __get_categories__(db, get_queries["get_category_end"])
+    return __get_categories__(db, get_queries["get_category_end"], as_dict)
 
 
 def get_category_by_id(db, ca_id, as_dict = False):
     if ca_id == None:
         return EMPTY_INPUT_EXCEPTION
-    if as_dict:
-        return __get_categories_dictionary__(db, get_queries["get_category_by_id"].replace("{ca_id}", str(ca_id)))
-    else:
-        return __get_categories__(db, get_queries["get_category_by_id"].replace("{ca_id}", str(ca_id)))
+    return __get_categories__(db, get_queries["get_category_by_id"].replace("{ca_id}", str(ca_id)), as_dict)
 
 
-def __get_selection_categories__(db, query):
+def __get_selection_categories__(db, query, as_dict):
     cur = db.cursor()
     selection_categories = []
+    if as_dict:
+        selection_categories = {}
 
     try:
         cur.execute(query)
-        for (sc_id, sc_name) in cur:
-            selection_categories.append({
-                "sc_id": str(sc_id),
-                "sc_name": str(sc_name)
-            })
-        return selection_categories
+        if as_dict:
+            for (sc_id, sc_name) in cur:
+                selection_categories[str(sc_id)] = {
+                    "sc_id": str(sc_id),
+                    "sc_name": str(sc_name)
+                }
+        else:
+            for (sc_id, sc_name) in cur:
+                selection_categories.append({
+                    "sc_id": str(sc_id),
+                    "sc_name": str(sc_name)
+                })
+    except Error as err:
+        if 'Unknown column' in str(err):
+            return INVALID_TYPE_EXCEPTION
+        raise err
     finally:
         cur.close()
-
-
-def __get_selection_categories_dictionary__(db, query):
-    cur = db.cursor()
-    selection_categories = {}
-
-    try:
-        cur.execute(query)
-        for (sc_id, sc_name) in cur:
-            selection_categories[str(sc_id)] = {
-                "sc_id": str(sc_id),
-                "sc_name": str(sc_name)
-            }
-        return selection_categories
-    finally:
-        cur.close()
+    return selection_categories
 
 
 def get_selection_categories(db, as_dict = False):
-    if as_dict:
-        return __get_selection_categories_dictionary__(db, get_queries["get_selection_categories"])
-    else:
-        return __get_selection_categories__(db, get_queries["get_selection_categories"])
+    return __get_selection_categories__(db, get_queries["get_selection_categories"], as_dict)
 
 
 def get_selection_category_end(db, as_dict = False):
-    if as_dict:
-        return __get_selection_categories_dictionary__(db, get_queries["get_selection_category_end"])
-    else:
-        return __get_selection_categories__(db, get_queries["get_selection_category_end"])
+    return __get_selection_categories__(db, get_queries["get_selection_category_end"], as_dict)
 
 
 def get_selection_category_by_id(db, sc_id, as_dict = False):
     if sc_id == None:
         return EMPTY_INPUT_EXCEPTION
-    if as_dict:
-        return __get_selection_categories_dictionary__(db, get_queries["get_selection_category_by_id"].replace("{sc_id}", str(sc_id)))
-    else:
-        return __get_selection_categories__(db, get_queries["get_selection_category_by_id"].replace("{sc_id}", str(sc_id)))
+    return __get_selection_categories__(db, get_queries["get_selection_category_by_id"].replace("{sc_id}", str(sc_id)), as_dict)
 
 
 def __get_selections__(db, query, as_dict):
