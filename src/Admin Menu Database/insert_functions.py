@@ -135,9 +135,10 @@ def insert_selection_category(db, sc_name):
 def insert_selection(db, s_name, sc_id, i_id, s_price):
     cur = db.cursor()
     try:
-        if s_name == None or sc_id == None:
+        if s_name == None or sc_id == None or i_id == None or s_price == None:
             return EMPTY_INPUT_EXCEPTION
-        #if not (s_price == None or type(s_price) == float or s_price != "NULL"):
+
+
         if s_price != "NULL":
             try:
                 float(s_price)
