@@ -1,5 +1,6 @@
 from flask import render_template
 import mysql.connector
+from mysql.connector import Error
 
 from exceptions import *
 
@@ -31,52 +32,68 @@ remove_queries = {
 
     # Delete a selection by s_id
     "remove_selection_category": ["DELETE FROM selection_category WHERE sc_id = {sc_id}"]
-
-    # Fixing:
-        # Fix delete ingredient by i_id
 }
 
 
 def remove_course(db, c_id):
-    for q in remove_queries["remove_course"]:
-        q = q.replace("{c_id}", str(c_id))
-        execute_query(q, db)
+        if type(c_id) != int:
+                return INVALID_TYPE_EXCEPTION
+        for i, q in enumerate(remove_queries["remove_course"]):
+                q = q.replace("{c_id}", str(c_id))
+                if i == len(remove_queries["remove_course"]) - 1:
+                        return execute_query(q, db)
+                execute_query(q, db)
+
 
 
 def remove_ingredient(db, i_id):
-    for q in remove_queries["remove_ingredient"]:
-        q = q.replace("{i_id}", str(i_id))
-        execute_query(q, db)
+        if type(i_id) != int:
+                return INVALID_TYPE_EXCEPTION
+        for i, q in enumerate(remove_queries["remove_ingredient"]):
+                q = q.replace("{i_id}", str(i_id))
+                if i == len(remove_queries["remove_ingredient"]) - 1:
+                        return execute_query(q, db)
+                execute_query(q, db)
 
 
 def remove_allergene(db, a_id):
-    for q in remove_queries["remove_allergene"]:
-        q = q.replace("{a_id}", str(a_id))
-        execute_query(q, db)
+        if type(a_id) != int:
+                return INVALID_TYPE_EXCEPTION
+        for i, q in enumerate(remove_queries["remove_allergene"]):
+                q = q.replace("{a_id}", str(a_id))
+                if i == len(remove_queries["remove_allergene"]) - 1:
+                        return execute_query(q, db)
+                execute_query(q, db)
 
 
 def remove_course_ingredient(db, c_id, i_id):
-    for q in remove_queries["remove_course_ingredient"]:
-        q = q.replace("{c_id}", str(c_id)).replace("{i_id}", str(i_id))
-        execute_query(q, db)
+        if type(c_id) != int or type(i_id) != int:
+                return INVALID_TYPE_EXCEPTION
+        for q in remove_queries["remove_course_ingredient"]:
+                q = q.replace("{c_id}", str(c_id)).replace("{i_id}", str(i_id))
+                return execute_query(q, db)
 
 
 def remove_course_selection(db, c_id, s_id):
-    for q in remove_queries["remove_course_selection"]:
-        q = q.replace("{c_id}", str(c_id)).replace("{s_id}", str(s_id))
-        execute_query(q, db)
+        if type(c_id) != int or type(s_id) != int:
+                return INVALID_TYPE_EXCEPTION
+        for q in remove_queries["remove_course_selection"]:
+                q = q.replace("{c_id}", str(c_id)).replace("{s_id}", str(s_id))
+                return execute_query(q, db)
 
 
 def remove_ingredient_allergene(db, i_id, a_id):
-    for q in remove_queries["remove_ingredient_allergene"]:
-        q = q.replace("{i_id}", str(i_id)).replace("{a_id}", str(a_id))
-        execute_query(q, db)
+        if type(i_id) != int or type(a_id) != int:
+                return INVALID_TYPE_EXCEPTION
+        for q in remove_queries["remove_ingredient_allergene"]:
+                q = q.replace("{i_id}", str(i_id)).replace("{a_id}", str(a_id))
+                return execute_query(q, db)
 
 
 def remove_category(db, ca_id):
-    for q in remove_queries["remove_category"]:
-        q = q.replace("{ca_id}", str(ca_id))
-        execute_query(q, db)
+        for q in remove_queries["remove_category"]:
+                q = q.replace("{ca_id}", str(ca_id))
+                execute_query(q, db)
 
 
 def remove_selection(db, s_id):
@@ -93,13 +110,13 @@ def remove_selection_category(db, sc_id):
 
 def execute_query(query, db):
     cur = db.cursor()
-
     try:
         cur.execute(query)
         db.commit()
-    except mysql.connector.Error as err:
-        print(err)
-        return render_template("error.html", msg=err)
+        if cur.rowcount == 0:
+                return NO_UPDATE_EXCEPTION
+    except Error as err:
+        raise err
     finally:
         cur.close()
 

@@ -307,7 +307,7 @@ class TestInsertFunctions(unittest.TestCase):
                          UNKKNOWN_REFERENCE_EXCEPTION)
 
         # Insert with empty name value
-        self.assertEqual(insert_selection(db, None, 1, 3, "0.99"),
+        self.assertEqual(insert_selection(db, None, 1, 3, 0.99),
                          EMPTY_INPUT_EXCEPTION)
 
         # Insert with empty category
