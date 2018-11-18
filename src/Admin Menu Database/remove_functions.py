@@ -91,21 +91,29 @@ def remove_ingredient_allergene(db, i_id, a_id):
 
 
 def remove_category(db, ca_id):
+        if type(ca_id) != int:
+                return INVALID_TYPE_EXCEPTION
         for q in remove_queries["remove_category"]:
                 q = q.replace("{ca_id}", str(ca_id))
-                execute_query(q, db)
+                return execute_query(q, db)
 
 
 def remove_selection(db, s_id):
-    for q in remove_queries["remove_selection"]:
-        q = q.replace("{s_id}", str(s_id))
-        execute_query(q, db)
+        if type(s_id) != int:
+                return INVALID_TYPE_EXCEPTION
+        for i, q in enumerate(remove_queries["remove_selection"]):
+                q = q.replace("{s_id}", str(s_id))
+                if i == len(remove_queries["remove_selection"]) - 1:
+                        return execute_query(q, db)
+                execute_query(q, db)
 
 
 def remove_selection_category(db, sc_id):
-    for q in remove_queries["remove_selection_category"]:
-        q = q.replace("{sc_id}", str(sc_id))
-        execute_query(q, db)
+        if type(sc_id) != int:
+                return INVALID_TYPE_EXCEPTION
+        for q in remove_queries["remove_selection_category"]:
+                q = q.replace("{sc_id}", str(sc_id))
+                return execute_query(q, db)
 
 
 def execute_query(query, db):
