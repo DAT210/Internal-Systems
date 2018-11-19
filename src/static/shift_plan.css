@@ -1,0 +1,28 @@
+ul {list-style-type: none;}
+body {
+    font-family: Verdana sans-serif;
+    width: 50%;
+    min-width: 500px;
+    margin: auto;
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+#head{
+    position: relative;
+    width: 100%;
+    padding: 20px 0px;
+    background: #00EFFF;
+    text-align: center;
+}
+#head ul {
+    margin: 0;
+    padding: 0;
+}
+
+#head ul li {
+    color: white;
+    font-size: 20px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+}
+

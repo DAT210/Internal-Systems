@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Work-Date</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+</head>
+<body style="margin: auto; width: 70%;">
+    <h2 style="margin-bottom:25px;"><strong>Sign In/Out</strong></h2>
+    <form class="form-horizontal" action="/timesheet/validate" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+        <label for="employee" class="control-label col-xs-1">Employee</label>
+        <div class="col-xs-6">
+            <input type="text" name="employee" placeholder="Employee_id" class="form-control" autocomplete="off" value="{{employee_id}}" readonly>
+        </div>
+        </div>
+        <div class="form-group">
+            <label for="date" class="control-label col-xs-1">Date</label>
+            <div class="col-xs-6">
+                <input type="text" name="date" placeholder="Date" class="form-control" autocomplete="off" readonly
+                       value="{{date}}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="timestamp" class="control-label col-xs-1">Timestamp</label>
+            <div class="col-xs-6">
+                <input type="text" name="timestamp" placeholder="Timestamp" class="form-control" autocomplete="off" readonly
+                value="{{time}}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="details" class="control-label col-xs-1"></label>
+            <div class="col-xs-6">
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <a href="/timesheet/{{ date }}" class="btn btn-primary">Cancel</a>
+            </div>
+        </div>
+    </form>
+</body>
+</html>
