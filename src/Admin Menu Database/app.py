@@ -35,9 +35,9 @@ isAdmin = True
 # CHANGE THIS INFORMATION FOR YOUR DATABASE ACCESS OK
 user_info = {
     "username": "root",
-    "password": "dat220pass",
+    "password": "root",
     "database": "menu",
-    "hostname": "localhost",
+    "hostname": "mysql",
 }
 
 app.config["DATABASE_USER"] = user_info["username"]
@@ -468,4 +468,4 @@ def update_selection_category_name_db():
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host="0.0.0.0", port=80)
