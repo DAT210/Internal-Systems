@@ -1,0 +1,32 @@
+version: '3.7'
+services: 
+
+  menu_admin:
+    container_name: menu_admin
+    restart: always
+    build:
+      context: "src/Admin Menu Database"
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
+    command: python3 app.py
+    networks: 
+      - backend
+      
+  mysql:
+    container_name: mysql
+    image: mysql/mysql-server:latest
+    build:
+      context: "src/Admin Menu Database/db"
+      dockerfile: Dockerfile
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_DATABASE: menu
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    ports:
+      - 3306:3306
+    networks: 
+      - backend
+networks: 
+  backend:
