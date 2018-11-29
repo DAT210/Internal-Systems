@@ -17,6 +17,14 @@ docker-compose up --build
 
 Then you can should be able to access the menu database admin webpage in your browser at http://localhost
 
+## Running the app without Docker
+
+Clone the repository and go to the `Internal-Systems/src/Admin Menu Database` folder. From here you can run `app.py`.
+
+To use the database you have to run the sql-script `Internal-Systems/src/Admin Menu Database/init_menu_db.sql` in MySQL and then setup a MySQL server on the machine. Furthermore you have to change the `user_info["username"]` parameter in `Internal-Systems/src/Admin Menu Database/app.py` from `mysql` to `localhost`.
+
+Then you can should be able to access the menu database admin webpage in your browser at http://localhost
+
 ## Developing
 
 ### Built With
